@@ -1,1 +1,1 @@
-# ruby-semver
+# @renovate/ruby-semver
