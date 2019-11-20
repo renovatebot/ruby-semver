@@ -151,329 +151,409 @@
 // # For the last example, single-digit versions are automatically extended with
 // # a zero to give a sensible result.
 
-
-
 // class Gem::Version
 //
 //   autoload :Requirement, 'rubygems/requirement'
 //
 //   include Comparable
-//
-//   VERSION_PATTERN = '[0-9]+(?>\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?'.freeze # :nodoc:
-//   ANCHORED_VERSION_PATTERN = /\A\s*(#{VERSION_PATTERN})?\s*\z/.freeze # :nodoc:
-//
-//   ##
-//   # A string representation of this Version.
-//
-//   def version
-//     @version.dup
-//   end
-//
-//   alias to_s version
-//
-//   ##
-//   # True if the +version+ string matches RubyGems' requirements.
-//
-//   def self.correct?(version)
-//     unless Gem::Deprecate.skip
-//       warn "nil versions are discouraged and will be deprecated in Rubygems 4" if version.nil?
-//     end
-//
-//     !!(version.to_s =~ ANCHORED_VERSION_PATTERN)
-//   end
-//
-//   ##
-//   # Factory method to create a Version object. Input may be a Version
-//   # or a String. Intended to simplify client code.
-//   #
-//   #   ver1 = Version.create('1.3.17')   # -> (Version object)
-//   #   ver2 = Version.create(ver1)       # -> (ver1)
-//   #   ver3 = Version.create(nil)        # -> nil
-//
-//   def self.create(input)
-//     if self === input  # check yourself before you wreck yourself
-//       input
-//     elsif input.nil?
-//       nil
-//     else
-//       new input
-//     end
-//   end
-//
-//   @@all = {}
-//
-//   def self.new(version) # :nodoc:
-//     return super unless Gem::Version == self
-//
-//     @@all[version] ||= super
-//   end
-//
-//   ##
-//   # Constructs a Version from the +version+ string.  A version string is a
-//   # series of digits or ASCII letters separated by dots.
-//
-//   def initialize(version)
-//     unless self.class.correct?(version)
-//       raise ArgumentError, "Malformed version number string #{version}"
-//     end
-//
-//     # If version is an empty string convert it to 0
-//     version = 0 if version.is_a?(String) && version =~ /\A\s*\Z/
-//
-//     @version = version.to_s.strip.gsub("-",".pre.")
-//     @segments = nil
-//   end
-//
-//   ##
-//   # Return a new version object where the next to the last revision
-//   # number is one greater (e.g., 5.3.1 => 5.4).
-//   #
-//   # Pre-release (alpha) parts, e.g, 5.3.1.b.2 => 5.4, are ignored.
-//
-//   def bump
-//     @bump ||= begin
-//                 segments = self.segments
-//                 segments.pop while segments.any? { |s| String === s }
-//                 segments.pop if segments.size > 1
-//
-//                 segments[-1] = segments[-1].succ
-//                 self.class.new segments.join(".")
-//               end
-//   end
-//
-//   ##
-//   # A Version is only eql? to another version if it's specified to the
-//   # same precision. Version "1.0" is not the same as version "1".
-//
-//   def eql?(other)
-//     self.class === other and @version == other._version
-//   end
-//
-//   def hash # :nodoc:
-//     canonical_segments.hash
-//   end
-//
-//   def init_with(coder) # :nodoc:
-//     yaml_initialize coder.tag, coder.map
-//   end
-//
-//   def inspect # :nodoc:
-//     "#<#{self.class} #{version.inspect}>"
-//   end
-//
-//   ##
-//   # Dump only the raw version string, not the complete object. It's a
-//   # string for backwards (RubyGems 1.3.5 and earlier) compatibility.
-//
-//   def marshal_dump
-//     [version]
-//   end
-//
-//   ##
-//   # Load custom marshal format. It's a string for backwards (RubyGems
-//   # 1.3.5 and earlier) compatibility.
-//
-//   def marshal_load(array)
-//     initialize array[0]
-//   end
-//
-//   def yaml_initialize(tag, map) # :nodoc:
-//     @version = map['version']
-//     @segments = nil
-//     @hash = nil
-//   end
-//
-//   def to_yaml_properties # :nodoc:
-//     ["@version"]
-//   end
-//
-//   def encode_with(coder) # :nodoc:
-//     coder.add 'version', @version
-//   end
-//
-//   ##
-//   # A version is considered a prerelease if it contains a letter.
-//
-//   def prerelease?
-//     unless instance_variable_defined? :@prerelease
-//       @prerelease = !!(@version =~ /[a-zA-Z]/)
-//     end
-//     @prerelease
-//   end
-//
-//   def pretty_print(q) # :nodoc:
-//     q.text "Gem::Version.new(#{version.inspect})"
-//   end
-//
-//   ##
-//   # The release for this version (e.g. 1.2.0.a -> 1.2.0).
-//   # Non-prerelease versions return themselves.
-//
-//   def release
-//     @release ||= if prerelease?
-//                    segments = self.segments
-//                    segments.pop while segments.any? { |s| String === s }
-//                    self.class.new segments.join('.')
-//                  else
-//                    self
-//                  end
-//   end
-//
-//   def segments # :nodoc:
-//     _segments.dup
-//   end
-//
-//   ##
-//   # A recommended version for use with a ~> Requirement.
-//
-//   def approximate_recommendation
-//     segments = self.segments
-//
-//     segments.pop    while segments.any? { |s| String === s }
-//     segments.pop    while segments.size > 2
-//     segments.push 0 while segments.size < 2
-//
-//     recommendation = "~> #{segments.join(".")}"
-//     recommendation += ".a" if prerelease?
-//     recommendation
-//   end
-//
-//   ##
-//   # Compares this version with +other+ returning -1, 0, or 1 if the
-//   # other version is larger, the same, or smaller than this
-//   # one. Attempts to compare to something that's not a
-//   # <tt>Gem::Version</tt> return +nil+.
-//
-//   def <=>(other)
-//     return unless Gem::Version === other
-//     return 0 if @version == other._version || canonical_segments == other.canonical_segments
-//
-//     lhsegments = canonical_segments
-//     rhsegments = other.canonical_segments
-//
-//     lhsize = lhsegments.size
-//     rhsize = rhsegments.size
-//     limit  = (lhsize > rhsize ? lhsize : rhsize) - 1
-//
-//     i = 0
-//
-//     while i <= limit
-//       lhs, rhs = lhsegments[i] || 0, rhsegments[i] || 0
-//       i += 1
-//
-//       next      if lhs == rhs
-//       return -1 if String  === lhs && Numeric === rhs
-//       return  1 if Numeric === lhs && String  === rhs
-//
-//       return lhs <=> rhs
-//     end
-//
-//     return 0
-//   end
-//
-//   def canonical_segments
-//     @canonical_segments ||=
-//       _split_segments.map! do |segments|
-//         segments.reverse_each.drop_while {|s| s == 0 }.reverse
-//       end.reduce(&:concat)
-//   end
-//
-//   protected
-//
-//   def _version
-//     @version
-//   end
-//
-//   def _segments
-//     # segments is lazy so it can pick up version values that come from
-//     # old marshaled versions, which don't go through marshal_load.
-//     # since this version object is cached in @@all, its @segments should be frozen
-//
-//     @segments ||= @version.scan(/[0-9]+|[a-z]+/i).map do |s|
-//       /^\d+$/ =~ s ? s.to_i : s
-//     end.freeze
-//   end
-//
-//   def _split_segments
-//     string_start = _segments.index {|s| s.is_a?(String) }
-//     string_segments = segments
-//     numeric_segments = string_segments.slice!(0, string_start || string_segments.size)
-//     return numeric_segments, string_segments
-//   end
-//
-// end
-
 export class Version {
+  //   VERSION_PATTERN =     '[0-9]+(?>\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?'.freeze # :nodoc:
+  //   ANCHORED_VERSION_PATTERN =                /\A\s*(#{VERSION_PATTERN})?\s*\z/.freeze # :nodoc:
   static ANCHORED_VERSION_PATTERN = /^\s*([0-9]+(\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?)?\s*$/;
-  private _version: string = '0';
-  private _segments: string[] = [];
 
-  constructor(versionString: string) {
-    if (versionString !== undefined && versionString.trim() === '') versionString = '0';
-    if (!Version.isCorrect(versionString)) throw new Error(`Malformed version number string ${versionString}`);
-    this._version = versionString.replace(/\-/g, '.pre.');
-  }
+  private readonly _version: string;
 
-  /**
-   * A string representation of this Version.
-   */
-  get version(): string {
+  private _segments: (string | number)[];
+
+  //   ##
+  //   # A string representation of this Version.
+  //
+  //   def version
+  //     @version.dup
+  //   end
+  version(): string {
     return this._version;
   }
 
-  /**
-   * Alias to version property
-   */
-
+  //   alias to_s version
   toString(): string {
-    return this.version;
+    return this.version();
   }
 
-  bump(): Version {
-    function isInt(str: string) {
-      var n = Math.floor(Number(str));
-      return n !== Infinity && String(n) === str && n >= 0;
-    }
-
-    let segments: string[] = this._version.split('.');
-    let newSegments: number[] = [];
-    for (let i = 0; i < segments.length; i++) {
-      if (isInt(segments[i])) newSegments.push(Number(segments[i])); else break;
-    }
-    if (newSegments.length > 1) newSegments.pop();
-    newSegments[newSegments.length - 1] = newSegments[newSegments.length - 1] + 1;
-    return new Version(newSegments.join('.'));
+  //   ##
+  //   # True if the +version+ string matches RubyGems' requirements.
+  //
+  //   def self.correct?(version)
+  //     unless Gem::Deprecate.skip
+  //       warn "nil versions are discouraged and will be deprecated in Rubygems 4" if version.nil?
+  //     end
+  //
+  //     !!(version.to_s =~ ANCHORED_VERSION_PATTERN)
+  //   end
+  static isCorrect(version: any): boolean {
+    return Version.ANCHORED_VERSION_PATTERN.test(version.toString());
   }
 
-  isEq(other: Version): boolean {
-    return other.version == this.version;
-  }
-
-  /**
-   * True if the +input+ string matches RubyGems' requirements.
-   * @param input
-   */
-  static isCorrect(input: Version | string): boolean {
-    let versionString: string = input instanceof Version ? Version.toString() : input;
-    return !!Version.ANCHORED_VERSION_PATTERN.test(versionString.toString());
-  }
-
-  /**
-   Factory method to create a Version object. Input may be a Version
-   or a String. Intended to simplify client code.
-
-   ver1 = Version.create('1.3.17')    -> (Version object)
-   ver2 = Version.create(ver1)        -> (ver1)
-   ver3 = Version.create(nil)         -> nil
-   * @param input
-   */
-  static create(input: string | Version): Version {
+  //   ##
+  //   # Factory method to create a Version object. Input may be a Version
+  //   # or a String. Intended to simplify client code.
+  //   #
+  //   #   ver1 = Version.create('1.3.17')   # -> (Version object)
+  //   #   ver2 = Version.create(ver1)       # -> (ver1)
+  //   #   ver3 = Version.create(nil)        # -> nil
+  //
+  //   def self.create(input)
+  //     if self === input  # check yourself before you wreck yourself
+  //       input
+  //     elsif input.nil?
+  //       nil
+  //     else
+  //       new input
+  //     end
+  //   end
+  static create(input: string | Version | null): Version {
+    if (input instanceof Version) return input;
     if (input === null) return null;
-    let versionString: string = input instanceof Version ? Version.toString() : input;
-    return new Version(versionString);
-
+    try {
+      return new Version(input);
+    } catch {
+      return null;
+    }
   }
 
+  //   @@all = {}
+  //
+  //   def self.new(version) # :nodoc:
+  //     return super unless Gem::Version == self
+  //
+  //     @@all[version] ||= super
+  //   end
+  //
 
-}
+  //   ##
+  //   # Constructs a Version from the +version+ string.  A version string is a
+  //   # series of digits or ASCII letters separated by dots.
+  //
+  //   def initialize(version)
+  //     unless self.class.correct?(version)
+  //       raise ArgumentError, "Malformed version number string #{version}"
+  //     end
+  //
+  //     # If version is an empty string convert it to 0
+  //     version = 0 if version.is_a?(String) && version =~ /\A\s*\Z/
+  //
+  //     @version = version.to_s.strip.gsub("-",".pre.")
+  //     @segments = nil
+  //   end
+  constructor(version: any) {
+    if (!Version.isCorrect(version)) {
+      throw new Error(`Malformed version number string ${version}`);
+    }
 
+    let versionStr = version.toString();
+
+    if (/^\s*$/.test(versionStr)) {
+      versionStr = '0';
+    }
+
+    this._version = versionStr.trim().replace(/-/g, '.pre.');
+    this._segments = null;
+  }
+
+  //   ##
+  //   # Return a new version object where the next to the last revision
+  //   # number is one greater (e.g., 5.3.1 => 5.4).
+  //   #
+  //   # Pre-release (alpha) parts, e.g, 5.3.1.b.2 => 5.4, are ignored.
+  //
+  //   def bump
+  //     @bump ||= begin
+  //                 segments = self.segments
+  //                 segments.pop while segments.any? { |s| String === s }
+  //                 segments.pop if segments.size > 1
+  //
+  //                 segments[-1] = segments[-1].succ
+  //                 self.class.new segments.join(".")
+  //               end
+  //   end
+  bump(): Version {
+    const segments = this.segments();
+    while (segments.findIndex(x => typeof x === 'string') !== -1)
+      segments.pop();
+
+    let lastIdx = segments.length - 2;
+    if (lastIdx >= 0) {
+      segments.pop();
+    } else {
+      lastIdx = 0;
+    }
+    segments[lastIdx] = (segments[lastIdx] as number) + 1;
+    return new Version(segments.join('.'));
+  }
+
+  //   ##
+  //   # A Version is only eql? to another version if it's specified to the
+  //   # same precision. Version "1.0" is not the same as version "1".
+  //
+  //   def eql?(other)
+  //     self.class === other and @version == other._version
+  //   end
+  isEql(other: Version): boolean {
+    return other.version() === this._version;
+  }
+
+  //
+  //   def hash # :nodoc:
+  //     canonical_segments.hash
+  //   end
+  //
+  //   def init_with(coder) # :nodoc:
+  //     yaml_initialize coder.tag, coder.map
+  //   end
+  //
+  //   def inspect # :nodoc:
+  //     "#<#{self.class} #{version.inspect}>"
+  //   end
+  //
+  //   ##
+  //   # Dump only the raw version string, not the complete object. It's a
+  //   # string for backwards (RubyGems 1.3.5 and earlier) compatibility.
+  //
+  //   def marshal_dump
+  //     [version]
+  //   end
+  //
+  //   ##
+  //   # Load custom marshal format. It's a string for backwards (RubyGems
+  //   # 1.3.5 and earlier) compatibility.
+  //
+  //   def marshal_load(array)
+  //     initialize array[0]
+  //   end
+  //
+  //   def yaml_initialize(tag, map) # :nodoc:
+  //     @version = map['version']
+  //     @segments = nil
+  //     @hash = nil
+  //   end
+  //
+  //   def to_yaml_properties # :nodoc:
+  //     ["@version"]
+  //   end
+  //
+  //   def encode_with(coder) # :nodoc:
+  //     coder.add 'version', @version
+  //   end
+  //
+
+  //   ##
+  //   # A version is considered a prerelease if it contains a letter.
+  //
+  //   def prerelease?
+  //     unless instance_variable_defined? :@prerelease
+  //       @prerelease = !!(@version =~ /[a-zA-Z]/)
+  //     end
+  //     @prerelease
+  //   end
+  isPrerelease() {
+    return /[a-zA-Z]/.test(this._version);
+  }
+
+  //   def pretty_print(q) # :nodoc:
+  //     q.text "Gem::Version.new(#{version.inspect})"
+  //   end
+  //
+  //   ##
+  //   # The release for this version (e.g. 1.2.0.a -> 1.2.0).
+  //   # Non-prerelease versions return themselves.
+
+  //   def release
+  //     @release ||= if prerelease?
+  //                    segments = self.segments
+  //                    segments.pop while segments.any? { |s| String === s }
+  //                    self.class.new segments.join('.')
+  //                  else
+  //                    self
+  //                  end
+  //   end
+  release(): Version {
+    if (this.isPrerelease()) {
+      const segments = this.segments();
+      while (segments.findIndex(x => typeof x === 'string') !== -1)
+        segments.pop();
+      return new Version(segments.join('.'));
+    }
+    return this;
+  }
+
+  //   def segments # :nodoc:
+  //     _segments.dup
+  //   end
+  //
+
+  //   ##
+  //   # A recommended version for use with a ~> Requirement.
+  //
+  //   def approximate_recommendation
+  //     segments = self.segments
+  //
+  //     segments.pop    while segments.any? { |s| String === s }
+  //     segments.pop    while segments.size > 2
+  //     segments.push 0 while segments.size < 2
+  //
+  //     recommendation = "~> #{segments.join(".")}"
+  //     recommendation += ".a" if prerelease?
+  //     recommendation
+  //   end
+  approximateRecommendation() {
+    const segments = this.segments();
+    while (segments.findIndex(x => typeof x === 'string') !== -1)
+      segments.pop();
+    while (segments.length > 2) segments.pop();
+    while (segments.length < 2) segments.push(0);
+
+    let recommendation = `~> ${segments.join('.')}`;
+    if (this.isPrerelease()) recommendation += '.a';
+    return recommendation;
+  }
+
+  //   ##
+  //   # Compares this version with +other+ returning -1, 0, or 1 if the
+  //   # other version is larger, the same, or smaller than this
+  //   # one. Attempts to compare to something that's not a
+  //   # <tt>Gem::Version</tt> return +nil+.
+  //
+  //   def <=>(other)
+  //     return unless Gem::Version === other
+  //     return 0 if @version == other._version || canonical_segments == other.canonical_segments
+  //
+  //     lhsegments = canonical_segments
+  //     rhsegments = other.canonical_segments
+  //
+  //     lhsize = lhsegments.size
+  //     rhsize = rhsegments.size
+  //     limit  = (lhsize > rhsize ? lhsize : rhsize) - 1
+  //
+  //     i = 0
+  //
+  //     while i <= limit
+  //       lhs, rhs = lhsegments[i] || 0, rhsegments[i] || 0
+  //       i += 1
+  //
+  //       next      if lhs == rhs
+  //       return -1 if String  === lhs && Numeric === rhs
+  //       return  1 if Numeric === lhs && String  === rhs
+  //
+  //       return lhs <=> rhs
+  //     end
+  //
+  //     return 0
+  //   end
+  cmp(other: Version): number {
+    if (other === null) return null;
+
+    const segEq = (x: any, y: any) => {
+      if (x.length !== y.length) return false;
+      for (let idx = 0; idx < x.length; idx += 1) {
+        if (x[idx] !== y[idx]) return false;
+      }
+      return true;
+    };
+
+    if (
+      this._version === other._version ||
+      segEq(this.canonicalSegments(), other.canonicalSegments())
+    ) {
+      return 0;
+    }
+
+    const lhsegments = this.canonicalSegments();
+    const rhsegments = other.canonicalSegments();
+
+    const lhsize = lhsegments.length;
+    const rhsize = rhsegments.length;
+    const limit = (lhsize > rhsize ? lhsize : rhsize) - 1;
+
+    let i = 0;
+
+    while (i <= limit) {
+      let lhs = lhsegments[i] || 0;
+      let rhs = rhsegments[i] || 0;
+      i += 1;
+
+      // eslint-disable-next-line no-continue
+      if (lhs === rhs) continue;
+
+      const isLeftStr = typeof lhs === 'string';
+      const isRightStr = typeof rhs === 'string';
+      if (isLeftStr && !isRightStr) return -1;
+      if (!isLeftStr && isRightStr) return 1;
+
+      lhs = lhs.toString();
+      rhs = rhs.toString();
+      return lhs.localeCompare(rhs, undefined, { numeric: true });
+    }
+
+    /* istanbul ignore next */
+    return 0;
+  }
+
+  //   def canonical_segments
+  //     @canonical_segments ||=
+  //       _split_segments.map! do |segments|
+  //         segments.reverse_each.drop_while {|s| s == 0 }.reverse
+  //       end.reduce(&:concat)
+  //   end
+  canonicalSegments() {
+    const canonicals = this.splitSegments().map(segments => {
+      const segmentsReverse = segments.reverse();
+      const sliceIdx = segmentsReverse.findIndex(s => s !== 0);
+      return segmentsReverse.slice(sliceIdx).reverse();
+    });
+    return Array.prototype.concat.apply([], canonicals);
+  }
+
+  //
+  //   protected
+  //
+  //   def _version
+  //     @version
+  //   end
+
+  //   def _segments
+  //     # segments is lazy so it can pick up version values that come from
+  //     # old marshaled versions, which don't go through marshal_load.
+  //     # since this version object is cached in @@all, its @segments should be frozen
+  //
+  //     @segments ||= @version.scan(/[0-9]+|[a-z]+/i).map do |s|
+  //       /^\d+$/ =~ s ? s.to_i : s
+  //     end.freeze
+  //   end
+  segments() {
+    if (!this._segments) {
+      this._segments = this._version
+        .match(/[0-9]+|[a-z]+/gi)
+        .map(s => (/^\d+$/.test(s) ? parseInt(s, 10) : s));
+    }
+    return [...this._segments];
+  }
+
+  //   def _split_segments
+  //     string_start = _segments.index {|s| s.is_a?(String) }
+  //     string_segments = segments
+  //     numeric_segments = string_segments.slice!(0, string_start || string_segments.size)
+  //     return numeric_segments, string_segments
+  //   end
+  splitSegments() {
+    let stringStart = this.segments().findIndex(x => typeof x === 'string');
+    stringStart = stringStart === -1 ? null : stringStart;
+
+    const stringSegments = this.segments();
+    const numericSegments = stringSegments.splice(
+      0,
+      stringStart || stringSegments.length
+    );
+
+    return [numericSegments, stringSegments];
+  }
+} // end
