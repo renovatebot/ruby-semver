@@ -128,7 +128,7 @@ export class Requirement {
   //       end
   //     end
   //   end
-  static create(...inputs: RawRequirement[]) {
+  static create(...inputs: RawRequirement[]): Requirement {
     if (inputs.length > 1) return new Requirement(...inputs);
     const input = inputs.shift();
     if (input instanceof Requirement) return input;

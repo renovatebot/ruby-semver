@@ -211,7 +211,7 @@ export class Version {
   //       new input
   //     end
   //   end
-  static create(input: any): Version {
+  static create(input: any): Version | null {
     if (input instanceof Version) return input;
     if (input === null) return null;
     try {
@@ -544,7 +544,7 @@ export class Version {
   //     numeric_segments = string_segments.slice!(0, string_start || string_segments.size)
   //     return numeric_segments, string_segments
   //   end
-  splitSegments() {
+  splitSegments(): [number[], (string | number)[]] {
     let stringStart = this.segments().findIndex(x => typeof x === 'string');
     stringStart = stringStart === -1 ? null : stringStart;
 
@@ -554,6 +554,6 @@ export class Version {
       stringStart || stringSegments.length
     );
 
-    return [numericSegments, stringSegments];
+    return [numericSegments as number[], stringSegments];
   }
 } // end

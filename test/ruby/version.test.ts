@@ -347,6 +347,8 @@ test('test_canonical_segments', () => {
   expect(v('1.0.0').canonicalSegments()).toEqual([1]);
   expect(v('1.0.0.a.1.0').canonicalSegments()).toEqual([1, 'a', 1]);
   expect(v('1.2.3-1').canonicalSegments()).toEqual([1, 2, 3, 'pre', 1]);
+
+  expect(v('1.2.3-1').splitSegments()).toEqual([[1, 2, 3], ['pre', 1]]);
 });
 
 //   # Asserts that +version+ is a prerelease.
