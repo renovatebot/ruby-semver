@@ -211,7 +211,7 @@ export class Version {
   //       new input
   //     end
   //   end
-  static create(input: string | Version | null): Version {
+  static create(input: any): Version {
     if (input instanceof Version) return input;
     if (input === null) return null;
     try {
@@ -298,7 +298,7 @@ export class Version {
   //   def eql?(other)
   //     self.class === other and @version == other._version
   //   end
-  isEql(other: Version): boolean {
+  strictEql(other: Version): boolean {
     return other.version() === this._version;
   }
 

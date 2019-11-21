@@ -1,3 +1,5 @@
+// https://github.com/ruby/ruby/blob/d4a86e407ec2057c2c7ad757aa76dad757f34c3a/test/rubygems/test_gem_version.rb
+
 import { Version } from '../../lib/ruby/version';
 
 const v = (x: string) => Version.create(x);
@@ -184,7 +186,7 @@ test('test_initialize_invalid', () => {
 //   end
 test('test_empty_version', () => {
   ['', '   ', ' '].forEach(empty => {
-    expect(new Version(empty).version()).toEqual('0');
+    expect(v(empty).version()).toEqual('0');
   });
 });
 
@@ -425,8 +427,8 @@ function assertVersionOrder(expected: string, actual: string, value: number) {
 //   end
 function assertVersionEql(firstStr: string, secondStr: string) {
   const [first, second] = [v(firstStr), v(secondStr)];
-  expect(first.isEql(second)).toBe(true);
-  expect(second.isEql(first)).toBe(true);
+  expect(first.strictEql(second)).toBe(true);
+  expect(second.strictEql(first)).toBe(true);
 }
 
 //   def assert_less_than(left, right)
@@ -455,8 +457,8 @@ function assertLessThan(left: string, right: string) {
 //   end
 function refuteVersionEql(firstStr: string, secondStr: string) {
   const [first, second] = [v(firstStr), v(secondStr)];
-  expect(first.isEql(second)).toBe(false);
-  expect(second.isEql(first)).toBe(false);
+  expect(first.strictEql(second)).toBe(false);
+  expect(second.strictEql(first)).toBe(false);
 }
 
 //   # Refute the assumption that the two versions are equal?.
