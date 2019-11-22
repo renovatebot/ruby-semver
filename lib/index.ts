@@ -1,6 +1,9 @@
 import { Version } from './ruby/version';
 import { Requirement } from './ruby/requirement';
 
+export * from './ruby/version';
+export * from './ruby/requirement';
+
 export type ReleaseType =
   | 'major'
   | 'premajor'

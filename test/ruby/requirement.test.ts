@@ -1,9 +1,7 @@
 // https://github.com/ruby/ruby/blob/d4a86e407ec2057c2c7ad757aa76dad757f34c3a/test/rubygems/test_gem_requirement.rb
 
-import { Version } from '../../lib/ruby/version';
-import { Requirement } from '../../lib/ruby/requirement';
+import { Requirement, create as v } from '../../lib';
 
-const v = (x: any) => Version.create(x);
 const req = (...x: any) => Requirement.create(...x);
 
 // # frozen_string_literal: true
@@ -68,10 +66,10 @@ test('test_initialize', () => {
 //     assert_equal req(">= 1.2", "<= 1.3"), Gem::Requirement.create(">= 1.2", "<= 1.3")
 //   end
 test('test_create', () => {
-  const r = req("= 1", "= 1");
+  const r = req('= 1', '= 1');
   expect(r._requirements).toHaveLength(1);
-  assertRequirementEqual(["= 1", "= 1"], ["= 1"]);
-  assertRequirementEqual([">= 1.2", "<= 1.3"], [">= 1.2", ["<= 1.3"]]);
+  assertRequirementEqual(['= 1', '= 1'], ['= 1']);
+  assertRequirementEqual(['>= 1.2', '<= 1.3'], ['>= 1.2', ['<= 1.3']]);
 });
 
 //   def test_empty_requirements_is_none
