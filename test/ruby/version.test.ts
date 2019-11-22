@@ -77,6 +77,7 @@ test('test_class_correct', () => {
   expect(Version.isCorrect(5.1)).toBe(true);
   expect(Version.isCorrect('5.1')).toBe(true);
   expect(Version.isCorrect('an incorrect version')).toBe(false);
+  expect(Version.isCorrect(null)).toBe(false);
 });
 
 //

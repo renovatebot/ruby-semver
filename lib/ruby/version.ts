@@ -191,7 +191,14 @@ export class Version {
   //     !!(version.to_s =~ ANCHORED_VERSION_PATTERN)
   //   end
   static isCorrect(version: any): boolean {
-    return Version.ANCHORED_VERSION_PATTERN.test(version.toString());
+    let versionStr;
+    try {
+      versionStr = version.toString();
+    } catch (_) {
+      return false;
+    }
+
+    return Version.ANCHORED_VERSION_PATTERN.test(versionStr);
   }
 
   //   ##
