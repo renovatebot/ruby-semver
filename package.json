@@ -1,7 +1,7 @@
 {
-  "name": "@renovate/ruby-semver",
-  "private": true,
-  "version": "0.0.1",
+  "name": "@renovatebot/ruby-semver",
+  "version": "0.1.0",
+  "license": "MIT",
   "description": "Ruby SemVer in TypeScript.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
