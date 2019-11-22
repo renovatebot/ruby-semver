@@ -225,7 +225,6 @@ test('diff', () => {
   expect(diff('1', '')).toEqual(null);
   expect(diff('1', '1.')).toEqual(null);
 
-
   expect(diff('1', '1')).toEqual(null);
   expect(diff('1.1', '1.1')).toEqual(null);
   expect(diff('1.1.2', '1.1.2')).toEqual(null);
