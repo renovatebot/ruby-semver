@@ -16,7 +16,7 @@ export type ReleaseType =
 export function eq(v1: string, v2: string): boolean {
   const x = Version.create(v1);
   const y = Version.create(v2);
-  return x.cmp(y) === 0;
+  return x.compare(y) === 0;
 }
 
 /**
@@ -25,7 +25,7 @@ export function eq(v1: string, v2: string): boolean {
 export function gt(v1: string, v2: string): boolean {
   const x = Version.create(v1);
   const y = Version.create(v2);
-  return x.cmp(y) === 1;
+  return x.compare(y) === 1;
 }
 
 /**
@@ -34,7 +34,7 @@ export function gt(v1: string, v2: string): boolean {
 export function gte(v1: string, v2: string): boolean {
   const x = Version.create(v1);
   const y = Version.create(v2);
-  return x.cmp(y) !== -1;
+  return x.compare(y) !== -1;
 }
 
 /**
@@ -43,7 +43,7 @@ export function gte(v1: string, v2: string): boolean {
 export function lt(v1: string, v2: string): boolean {
   const x = Version.create(v1);
   const y = Version.create(v2);
-  return x.cmp(y) === -1;
+  return x.compare(y) === -1;
 }
 
 /**
@@ -52,13 +52,14 @@ export function lt(v1: string, v2: string): boolean {
 export function lte(v1: string, v2: string): boolean {
   const x = Version.create(v1);
   const y = Version.create(v2);
-  return x.cmp(y) !== 1;
+  return x.compare(y) !== 1;
 }
 
 /**
  * Return the parsed version, or null if it's not valid.
  */
 export function valid(version: string): string | null {
+  if (!version) return null;
   return Version.isCorrect(version) ? version : null;
 }
 
@@ -107,7 +108,9 @@ export function minSatisfying(
  * Return the major version number.
  */
 export function major(v: string): number {
+  if (!v) return null;
   const version = Version.create(v);
+  if (!version) return null;
   const [segments] = version.splitSegments();
   const [x] = segments;
   return x;
@@ -117,7 +120,9 @@ export function major(v: string): number {
  * Return the minor version number.
  */
 export function minor(v: string): number {
+  if (!v) return null;
   const version = Version.create(v);
+  if (!version) return null;
   const [segments] = version.splitSegments();
   const [, x] = segments;
   return x || null;
@@ -127,7 +132,9 @@ export function minor(v: string): number {
  * Return the patch version number.
  */
 export function patch(v: string): number {
+  if (!v) return null;
   const version = Version.create(v);
+  if (!version) return null;
   const [segments] = version.splitSegments();
   const [, , x] = segments;
   return x || null;
@@ -137,7 +144,48 @@ export function patch(v: string): number {
  * Returns an array of prerelease components, or null if none exist.
  */
 export function prerelease(v: string): string[] | null {
+  if (!v) return null;
   const version = Version.create(v);
+  if (!version) return null;
   const [, segments] = version.splitSegments();
   return segments.length ? segments.map(x => x.toString()) : null;
+}
+
+/**
+ * Adapted from:
+ * https://github.com/snyk/ruby-semver/blob/1a3a761f0aceea14dcd558d7bd23c0c54a22d52c/lib/comparison.js
+ */
+export function diff(v1: string, v2: string): ReleaseType | null {
+  if (!v1 || !v2) return null;
+
+  const version1 = Version.create(v1);
+  const version2 = Version.create(v2);
+  if (!version1 || !version2) return null;
+
+  if (version1.compare(version2) === 0) {
+    return null;
+  }
+
+  let hasPrerelease;
+
+  const segments = [version1.getSegments(), version2.getSegments()]
+    .map(seg => {
+      const prereleaseIndex = seg.findIndex(v => String(v).match(/[a-zA-Z]/));
+      if (prereleaseIndex === -1) {
+        return seg;
+      }
+
+      hasPrerelease = true;
+      return seg.slice(0, prereleaseIndex);
+    })
+    .sort((a, b) => b.length - a.length);
+
+  const diffPosition = segments[0].findIndex((v, i) => v !== segments[1][i]);
+
+  if (diffPosition === -1 && hasPrerelease) {
+    return 'prerelease';
+  }
+
+  const diffType = ['major', 'minor'][diffPosition] || 'patch';
+  return ((hasPrerelease ? 'pre' : '') + diffType) as ReleaseType;
 }

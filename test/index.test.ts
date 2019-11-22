@@ -12,6 +12,7 @@ import {
   minor,
   patch,
   prerelease,
+  diff,
 } from '../lib';
 
 function checkAsymmetric<T>(
@@ -110,6 +111,8 @@ test('lte', () => {
 test('valid', () => {
   expect(valid('1.0.0')).toBe('1.0.0');
   expect(valid('1.0.0.')).toBe(null);
+  expect(valid('')).toBe(null);
+  expect(valid(null)).toBe(null);
 });
 
 test('satisfies', () => {
@@ -170,6 +173,10 @@ test('minSatisfying', () => {
 });
 
 test('major', () => {
+  expect(major(null)).toBe(null);
+  expect(major('')).toBe(null);
+  expect(major('1.')).toBe(null);
+
   expect(major('1')).toEqual(1);
   expect(major('1.2')).toEqual(1);
   expect(major('1.2.0')).toEqual(1);
@@ -177,6 +184,10 @@ test('major', () => {
 });
 
 test('minor', () => {
+  expect(minor(null)).toBe(null);
+  expect(minor('')).toBe(null);
+  expect(minor('1.')).toBe(null);
+
   expect(minor('1.2')).toEqual(2);
   expect(minor('1.2.0')).toEqual(2);
   expect(minor('1.2.0.alpha.4')).toEqual(2);
@@ -184,6 +195,10 @@ test('minor', () => {
 });
 
 test('patch', () => {
+  expect(patch(null)).toBe(null);
+  expect(patch('')).toBe(null);
+  expect(patch('1.')).toBe(null);
+
   expect(patch('1.2.2')).toEqual(2);
   expect(patch('1.2.1.alpha.4')).toEqual(1);
   expect(patch('1')).toBeNull();
@@ -191,6 +206,10 @@ test('patch', () => {
 });
 
 test('prerelease', () => {
+  expect(prerelease(null)).toBe(null);
+  expect(prerelease('')).toBe(null);
+  expect(prerelease('1.')).toBe(null);
+
   expect(prerelease('1.2.0-alpha')).toEqual(['pre', 'alpha']);
   expect(prerelease('1.2.0.alpha')).toEqual(['alpha']);
   expect(prerelease('1.2.0.alpha1')).toEqual(['alpha', '1']);
@@ -198,4 +217,58 @@ test('prerelease', () => {
   expect(prerelease('1')).toBe(null);
   expect(prerelease('1.2')).toBe(null);
   expect(prerelease('1.2.3')).toBe(null);
+});
+
+test('diff', () => {
+  expect(diff(null, '1')).toEqual(null);
+  expect(diff('1', null)).toEqual(null);
+  expect(diff('1', '')).toEqual(null);
+  expect(diff('1', '1.')).toEqual(null);
+
+
+  expect(diff('1', '1')).toEqual(null);
+  expect(diff('1.1', '1.1')).toEqual(null);
+  expect(diff('1.1.2', '1.1.2')).toEqual(null);
+  expect(diff('1.1.1.1', '1.1.1.1')).toEqual(null);
+  expect(diff('1.0.0.alpha.1', '1.0.0.alpha.1')).toEqual(null);
+  expect(diff('1.1.2-1', '1.1.2.pre.1')).toEqual(null);
+  expect(diff('1.1.2.pre.1', '1.1.2-1')).toEqual(null);
+  expect(diff('2', '2.0')).toEqual(null);
+  expect(diff('2.0', '2')).toEqual(null);
+  expect(diff('2', '2.0.0')).toEqual(null);
+  expect(diff('2.0.0', '2')).toEqual(null);
+  expect(diff('2', '2.0.0.0')).toEqual(null);
+  expect(diff('2.0.0.0', '2')).toEqual(null);
+
+  expect(diff('1', '3')).toEqual('major');
+  expect(diff('1.1', '3.1')).toEqual('major');
+  expect(diff('1.1.2', '3.0.0')).toEqual('major');
+  expect(diff('1.1.2', '2.0.0')).toEqual('major');
+  expect(diff('1.1.1.1', '2.0.0')).toEqual('major');
+
+  expect(diff('1.1', '1.2')).toEqual('minor');
+  expect(diff('1.1.2', '1.2.1.1')).toEqual('minor');
+  expect(diff('1.1.2', '1.2.0')).toEqual('minor');
+  expect(diff('1.1.2.1', '1.2.0')).toEqual('minor');
+  expect(diff('1.1.2.1', '1.2.0.1')).toEqual('minor');
+
+  expect(diff('1.1.2', '1.1.3')).toEqual('patch');
+  expect(diff('1.1.2', '1.1.2.1')).toEqual('patch');
+  expect(diff('1.1.2.1', '1.1.3')).toEqual('patch');
+  expect(diff('1.1.2.1', '1.1.3.2.1')).toEqual('patch');
+  expect(diff('1.1.2.1', '1.1.2.1.1.1.2')).toEqual('patch');
+  expect(diff('1.1.2.1.1.1.1', '1.1.2.1.1.1.2')).toEqual('patch');
+
+  expect(diff('1.0.0.alpha.1', '2.0.0')).toEqual('premajor');
+
+  expect(diff('1.1.2.alpha.1', '1.2.0')).toEqual('preminor');
+
+  expect(diff('1.1.2.alpha.1', '1.1.3')).toEqual('prepatch');
+  expect(diff('1.1.2.3.alpha.1', '1.1.2.alpha.2')).toEqual('prepatch');
+  expect(diff('1.1.2.3.alpha.1', '1.1.2.4.alpha.2')).toEqual('prepatch');
+  expect(diff('1.1.2.alpha.1', '1.1.2.1')).toEqual('prepatch');
+
+  expect(diff('1.1.2.alpha.1', '1.1.2.alpha.2')).toEqual('prerelease');
+  expect(diff('1.1.2.3.alpha.1', '1.1.2.3.alpha.2')).toEqual('prerelease');
+  expect(diff('1.alpha.1', '1')).toEqual('prerelease');
 });

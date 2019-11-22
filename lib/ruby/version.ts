@@ -151,6 +151,8 @@
 // # For the last example, single-digit versions are automatically extended with
 // # a zero to give a sensible result.
 
+export type SegmentElement = string | number;
+
 // class Gem::Version
 //
 //   autoload :Requirement, 'rubygems/requirement'
@@ -163,7 +165,7 @@ export class Version {
 
   private readonly _version: string;
 
-  private _segments: (string | number)[];
+  private _segments: SegmentElement[];
 
   //   ##
   //   # A string representation of this Version.
@@ -284,7 +286,7 @@ export class Version {
   //               end
   //   end
   bump(): Version {
-    const segments = this.segments();
+    const segments = this.getSegments();
     while (segments.findIndex(x => typeof x === 'string') !== -1)
       segments.pop();
 
@@ -362,7 +364,7 @@ export class Version {
   //     end
   //     @prerelease
   //   end
-  isPrerelease() {
+  isPrerelease(): boolean {
     return /[a-zA-Z]/.test(this._version);
   }
 
@@ -385,7 +387,7 @@ export class Version {
   //   end
   release(): Version {
     if (this.isPrerelease()) {
-      const segments = this.segments();
+      const segments = this.getSegments();
       while (segments.findIndex(x => typeof x === 'string') !== -1)
         segments.pop();
       return new Version(segments.join('.'));
@@ -412,8 +414,8 @@ export class Version {
   //     recommendation += ".a" if prerelease?
   //     recommendation
   //   end
-  approximateRecommendation() {
-    const segments = this.segments();
+  approximateRecommendation(): string {
+    const segments = this.getSegments();
     while (segments.findIndex(x => typeof x === 'string') !== -1)
       segments.pop();
     while (segments.length > 2) segments.pop();
@@ -456,10 +458,10 @@ export class Version {
   //
   //     return 0
   //   end
-  cmp(other: Version): number {
+  compare(other: Version): number {
     if (other === null) return null;
 
-    const segEq = (x: any, y: any) => {
+    const segEq = (x: any, y: any): boolean => {
       if (x.length !== y.length) return false;
       for (let idx = 0; idx < x.length; idx += 1) {
         if (x[idx] !== y[idx]) return false;
@@ -511,7 +513,7 @@ export class Version {
   //         segments.reverse_each.drop_while {|s| s == 0 }.reverse
   //       end.reduce(&:concat)
   //   end
-  canonicalSegments() {
+  canonicalSegments(): SegmentElement[] {
     const canonicals = this.splitSegments().map(segments => {
       const segmentsReverse = segments.reverse();
       const sliceIdx = segmentsReverse.findIndex(s => s !== 0);
@@ -536,7 +538,7 @@ export class Version {
   //       /^\d+$/ =~ s ? s.to_i : s
   //     end.freeze
   //   end
-  segments() {
+  getSegments(): SegmentElement[] {
     if (!this._segments) {
       this._segments = this._version
         .match(/[0-9]+|[a-z]+/gi)
@@ -551,11 +553,11 @@ export class Version {
   //     numeric_segments = string_segments.slice!(0, string_start || string_segments.size)
   //     return numeric_segments, string_segments
   //   end
-  splitSegments(): [number[], (string | number)[]] {
-    let stringStart = this.segments().findIndex(x => typeof x === 'string');
+  splitSegments(): [number[], SegmentElement[]] {
+    let stringStart = this.getSegments().findIndex(x => typeof x === 'string');
     stringStart = stringStart === -1 ? null : stringStart;
 
-    const stringSegments = this.segments();
+    const stringSegments = this.getSegments();
     const numericSegments = stringSegments.splice(
       0,
       stringStart || stringSegments.length
@@ -564,3 +566,5 @@ export class Version {
     return [numericSegments as number[], stringSegments];
   }
 } // end
+
+export const create = Version.create;

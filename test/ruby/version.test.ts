@@ -272,7 +272,7 @@ test('test_spaceship', () => {
   assertVersionOrder('5.a', '5.0.0.rc2', -1);
   assertVersionOrder('5.x', '5.0.0.rc2', 1);
 
-  expect(v('1.0').cmp(v('whatever'))).toBe(null);
+  expect(v('1.0').compare(v('whatever'))).toBe(null);
 });
 
 //   def test_approximate_recommendation
@@ -415,11 +415,11 @@ function assertReleaseEqual(release: string, version: string) {
 //     assert_equal v(expected).hash, v(actual).hash, "since #{actual} == #{expected}, they must have the same hash"
 //   end
 function assertVersionEqual(expected: string, actual: string) {
-  expect(v(expected).cmp(v(actual))).toEqual(0);
+  expect(v(expected).compare(v(actual))).toEqual(0);
 }
 function assertVersionOrder(expected: string, actual: string, value: number) {
-  expect(v(expected).cmp(v(actual))).toEqual(value);
-  expect(v(actual).cmp(v(expected))).toEqual(value === 0 ? 0 : -value);
+  expect(v(expected).compare(v(actual))).toEqual(value);
+  expect(v(actual).compare(v(expected))).toEqual(value === 0 ? 0 : -value);
 }
 
 //   # Assert that two versions are eql?. Checks both directions.
@@ -470,7 +470,7 @@ function refuteVersionEql(firstStr: string, secondStr: string) {
 //     refute_equal v(unexpected), v(actual)
 //   end
 function refuteVersionEqual(unexpected: string, actual: string) {
-  expect(v(unexpected).cmp(v(actual))).not.toEqual(0);
+  expect(v(unexpected).compare(v(actual))).not.toEqual(0);
 }
 
 // end

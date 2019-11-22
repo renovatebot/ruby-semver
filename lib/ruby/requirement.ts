@@ -16,13 +16,13 @@
 
 import { Version } from './version';
 
-type RawRequirement = Version | string | null;
-type ParsedRequirement = [string, Version];
+export type RawRequirement = Version | string | null;
+export type ParsedRequirement = [string, Version];
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat#Alternative
  */
-function flatten(input: any[]) {
+function flatten(input: any[]): any[] {
   const stack = [...input];
   const res = [];
   while (stack.length) {
@@ -37,7 +37,8 @@ function flatten(input: any[]) {
 }
 
 // TODO: consider richer `eql` semantics
-function uniq(array: any[], eql = (x: any, y: any) => x === y) {
+const defaultEql = (x: any, y: any): boolean => x === y;
+function uniq(array: any[], eql = defaultEql): any[] {
   return array.filter((x, idx, arr) => {
     return arr.findIndex(y => eql(x, y)) === idx;
   });
@@ -47,7 +48,7 @@ function reqsEql(
   xReqs: ParsedRequirement[],
   yReqs: ParsedRequirement[],
   eql: (x: ParsedRequirement, y: ParsedRequirement) => boolean
-) {
+): boolean {
   if (xReqs.length !== yReqs.length) return false;
   for (let idx = 0; idx < xReqs.length; idx += 1) {
     if (!eql(xReqs[idx], yReqs[idx])) return false;
@@ -91,10 +92,10 @@ export class Requirement {
   //   # The default requirement matches any version
   //
   //   DefaultPrereleaseRequirement = [">=", Gem::Version.new("0.a")].freeze
-  static DEFAULT_PRERELEASE_REQUIREMENT: ParsedRequirement = [
-    '>=',
-    new Version('0.a'),
-  ];
+  // static DEFAULT_PRERELEASE_REQUIREMENT: ParsedRequirement = [
+  //   '>=',
+  //   new Version('0.a'),
+  // ];
 
   //   ##
   //   # Raised when a bad requirement is encountered
@@ -128,7 +129,7 @@ export class Requirement {
   //       end
   //     end
   //   end
-  static create(...inputs: RawRequirement[]): Requirement {
+  static create(...inputs: any[]): Requirement {
     if (inputs.length > 1) return new Requirement(...inputs);
     const input = inputs.shift();
     if (input instanceof Requirement) return input;
@@ -144,7 +145,7 @@ export class Requirement {
   //   def self.default
   //     new '>= 0'
   //   end
-  static default() {
+  static default(): Requirement {
     return new Requirement('>= 0');
   }
 
@@ -187,7 +188,7 @@ export class Requirement {
   //     end
   //   end
   static parse(obj: any): ParsedRequirement {
-    const err = () => {
+    const err = (): void => {
       throw new Error(`Illformed requirement [${obj}]`);
     };
 
@@ -252,7 +253,7 @@ export class Requirement {
   //
   //     @requirements.concat new
   //   end
-  concat(newReqs: RawRequirement[]) {
+  concat(newReqs: RawRequirement[]): void {
     const flattened = flatten(newReqs);
     const compacted = flattened.filter(x => x !== null);
     const unique = uniq(compacted);
@@ -286,12 +287,12 @@ export class Requirement {
   //       false
   //     end
   //   end
-  isNone() {
+  isNone(): boolean {
     if (this._requirements.length === 1) {
       const [op, v] = this._requirements[0];
       return (
         op === Requirement.DEFAULT_REQUIREMENT[0] &&
-        v.cmp(Requirement.DEFAULT_REQUIREMENT[1]) === 0
+        v.compare(Requirement.DEFAULT_REQUIREMENT[1]) === 0
       );
     }
     return false;
@@ -353,7 +354,7 @@ export class Requirement {
   //   def prerelease?
   //     requirements.any? { |r| r.last.prerelease? }
   //   end
-  isPrerelease() {
+  isPrerelease(): boolean {
     return this._requirements.some(([, ver]) => ver.isPrerelease());
   }
 
@@ -372,7 +373,7 @@ export class Requirement {
   //     # #28965: syck has a bug with unquoted '=' YAML.loading as YAML::DefaultKey
   //     requirements.all? { |op, rv| (OPS[op] || OPS["="]).call version, rv }
   //   end
-  isSatisfiedBy(v: Version) {
+  isSatisfiedBy(v: Version): boolean {
     return this._requirements.every(([op, r]) => {
       //     "="  =>  lambda { |v, r| v == r },
       //     "!=" =>  lambda { |v, r| v != r },
@@ -383,19 +384,19 @@ export class Requirement {
       //     "~>" =>  lambda { |v, r| v >= r && v.release < r.bump }
       switch (op) {
         case '=':
-          return v.cmp(r) === 0;
+          return v.compare(r) === 0;
         case '!=':
-          return v.cmp(r) !== 0;
+          return v.compare(r) !== 0;
         case '>':
-          return v.cmp(r) === 1;
+          return v.compare(r) === 1;
         case '<':
-          return v.cmp(r) === -1;
+          return v.compare(r) === -1;
         case '>=':
-          return v.cmp(r) !== -1;
+          return v.compare(r) !== -1;
         case '<=':
-          return v.cmp(r) !== 1;
+          return v.compare(r) !== 1;
         case '~>':
-          return v.cmp(r) !== -1 && v.release().cmp(r.bump()) === -1;
+          return v.compare(r) !== -1 && v.release().compare(r.bump()) === -1;
         /* istanbul ignore next */
         default:
           return false;
@@ -414,7 +415,7 @@ export class Requirement {
   //
   //     not %w[> >=].include? @requirements.first.first # grab the operator
   //   end
-  isSpecific() {
+  isSpecific(): boolean {
     if (this._requirements.length > 1) return true;
     const firstOp = this._requirements[0][0];
     return !(firstOp === '>' || firstOp === '>=');
@@ -437,12 +438,12 @@ export class Requirement {
   //     # that version precision is the same
   //     _tilde_requirements.eql?(other._tilde_requirements)
   //   end
-  eql(other: Requirement) {
+  eql(other: Requirement): boolean {
     if (
       !reqsEql(
         this._requirements,
         other._requirements,
-        ([xOp, xVer], [yOp, yVer]) => xOp === yOp && xVer.cmp(yVer) === 0
+        ([xOp, xVer], [yOp, yVer]) => xOp === yOp && xVer.compare(yVer) === 0
       )
     ) {
       return false;
@@ -463,7 +464,7 @@ export class Requirement {
   //   def _tilde_requirements
   //     requirements.select { |r| r.first == "~>" }
   //   end
-  _tildeRequirements() {
+  _tildeRequirements(): ParsedRequirement[] {
     return this._requirements.filter(([op]) => op === '~>');
   }
   //
@@ -491,3 +492,5 @@ export class Requirement {
   //
   // end
 }
+
+export const parse = Requirement.parse;
