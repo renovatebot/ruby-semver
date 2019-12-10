@@ -12,7 +12,6 @@ import {
   minor,
   patch,
   prerelease,
-  diff,
 } from '../lib';
 
 function checkAsymmetric<T>(
@@ -217,57 +216,4 @@ test('prerelease', () => {
   expect(prerelease('1')).toBe(null);
   expect(prerelease('1.2')).toBe(null);
   expect(prerelease('1.2.3')).toBe(null);
-});
-
-test('diff', () => {
-  expect(diff(null, '1')).toEqual(null);
-  expect(diff('1', null)).toEqual(null);
-  expect(diff('1', '')).toEqual(null);
-  expect(diff('1', '1.')).toEqual(null);
-
-  expect(diff('1', '1')).toEqual(null);
-  expect(diff('1.1', '1.1')).toEqual(null);
-  expect(diff('1.1.2', '1.1.2')).toEqual(null);
-  expect(diff('1.1.1.1', '1.1.1.1')).toEqual(null);
-  expect(diff('1.0.0.alpha.1', '1.0.0.alpha.1')).toEqual(null);
-  expect(diff('1.1.2-1', '1.1.2.pre.1')).toEqual(null);
-  expect(diff('1.1.2.pre.1', '1.1.2-1')).toEqual(null);
-  expect(diff('2', '2.0')).toEqual(null);
-  expect(diff('2.0', '2')).toEqual(null);
-  expect(diff('2', '2.0.0')).toEqual(null);
-  expect(diff('2.0.0', '2')).toEqual(null);
-  expect(diff('2', '2.0.0.0')).toEqual(null);
-  expect(diff('2.0.0.0', '2')).toEqual(null);
-
-  expect(diff('1', '3')).toEqual('major');
-  expect(diff('1.1', '3.1')).toEqual('major');
-  expect(diff('1.1.2', '3.0.0')).toEqual('major');
-  expect(diff('1.1.2', '2.0.0')).toEqual('major');
-  expect(diff('1.1.1.1', '2.0.0')).toEqual('major');
-
-  expect(diff('1.1', '1.2')).toEqual('minor');
-  expect(diff('1.1.2', '1.2.1.1')).toEqual('minor');
-  expect(diff('1.1.2', '1.2.0')).toEqual('minor');
-  expect(diff('1.1.2.1', '1.2.0')).toEqual('minor');
-  expect(diff('1.1.2.1', '1.2.0.1')).toEqual('minor');
-
-  expect(diff('1.1.2', '1.1.3')).toEqual('patch');
-  expect(diff('1.1.2', '1.1.2.1')).toEqual('patch');
-  expect(diff('1.1.2.1', '1.1.3')).toEqual('patch');
-  expect(diff('1.1.2.1', '1.1.3.2.1')).toEqual('patch');
-  expect(diff('1.1.2.1', '1.1.2.1.1.1.2')).toEqual('patch');
-  expect(diff('1.1.2.1.1.1.1', '1.1.2.1.1.1.2')).toEqual('patch');
-
-  expect(diff('1.0.0.alpha.1', '2.0.0')).toEqual('premajor');
-
-  expect(diff('1.1.2.alpha.1', '1.2.0')).toEqual('preminor');
-
-  expect(diff('1.1.2.alpha.1', '1.1.3')).toEqual('prepatch');
-  expect(diff('1.1.2.3.alpha.1', '1.1.2.alpha.2')).toEqual('prepatch');
-  expect(diff('1.1.2.3.alpha.1', '1.1.2.4.alpha.2')).toEqual('prepatch');
-  expect(diff('1.1.2.alpha.1', '1.1.2.1')).toEqual('prepatch');
-
-  expect(diff('1.1.2.alpha.1', '1.1.2.alpha.2')).toEqual('prerelease');
-  expect(diff('1.1.2.3.alpha.1', '1.1.2.3.alpha.2')).toEqual('prerelease');
-  expect(diff('1.alpha.1', '1')).toEqual('prerelease');
 });
