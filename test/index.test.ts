@@ -187,6 +187,9 @@ test('minor', () => {
   expect(minor('')).toBe(null);
   expect(minor('1.')).toBe(null);
 
+  expect(minor('1')).toEqual(null);
+  expect(minor('1.0')).toEqual(0);
+
   expect(minor('1.2')).toEqual(2);
   expect(minor('1.2.0')).toEqual(2);
   expect(minor('1.2.0.alpha.4')).toEqual(2);
@@ -197,6 +200,10 @@ test('patch', () => {
   expect(patch(null)).toBe(null);
   expect(patch('')).toBe(null);
   expect(patch('1.')).toBe(null);
+
+  expect(patch('1')).toEqual(null);
+  expect(patch('1.0')).toEqual(null);
+  expect(patch('1.0.0')).toEqual(0);
 
   expect(patch('1.2.2')).toEqual(2);
   expect(patch('1.2.1.alpha.4')).toEqual(1);
