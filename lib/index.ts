@@ -125,7 +125,7 @@ export function minor(v: string): number {
   if (!version) return null;
   const [segments] = version.splitSegments();
   const [, x] = segments;
-  return x || null;
+  return typeof x === 'number' ? x : null;
 }
 
 /**
@@ -137,7 +137,7 @@ export function patch(v: string): number {
   if (!version) return null;
   const [segments] = version.splitSegments();
   const [, , x] = segments;
-  return x || null;
+  return typeof x === 'number' ? x : null;
 }
 
 /**
