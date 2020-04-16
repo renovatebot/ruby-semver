@@ -153,6 +153,8 @@
 
 export type SegmentElement = string | number;
 
+const copystr = (x: string): string => (' ' + x).slice(1);
+
 // class Gem::Version
 //
 //   autoload :Requirement, 'rubygems/requirement'
@@ -164,8 +166,6 @@ export class Version {
   static ANCHORED_VERSION_PATTERN = /^\s*([0-9]+(\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?)?\s*$/;
 
   private readonly _version: string;
-
-  private _segments: SegmentElement[];
 
   //   ##
   //   # A string representation of this Version.
@@ -195,7 +195,7 @@ export class Version {
   static isCorrect(version: any): boolean {
     let versionStr;
     try {
-      versionStr = version.toString();
+      versionStr = copystr(version.toString());
     } catch (_) {
       return false;
     }
@@ -259,14 +259,13 @@ export class Version {
       throw new Error(`Malformed version number string ${version}`);
     }
 
-    let versionStr = version.toString();
+    let versionStr = copystr(version.toString());
 
     if (/^\s*$/.test(versionStr)) {
       versionStr = '0';
     }
 
     this._version = versionStr.trim().replace(/-/g, '.pre.');
-    this._segments = null;
   }
 
   //   ##
@@ -539,12 +538,9 @@ export class Version {
   //     end.freeze
   //   end
   getSegments(): SegmentElement[] {
-    if (!this._segments) {
-      this._segments = this._version
-        .match(/[0-9]+|[a-z]+/gi)
-        .map(s => (/^\d+$/.test(s) ? parseInt(s, 10) : s));
-    }
-    return [...this._segments];
+    return this._version
+      .match(/[0-9]+|[a-z]+/gi)
+      .map(s => (/^\d+$/.test(s) ? parseInt(s, 10) : copystr(s)));
   }
 
   //   def _split_segments
