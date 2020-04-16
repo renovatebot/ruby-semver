@@ -56,6 +56,8 @@ function reqsEql(
   return true;
 }
 
+const copystr = (x: string): string => (' ' + x).slice(1);
+
 // class Gem::Requirement
 //
 export class Requirement {
@@ -136,7 +138,7 @@ export class Requirement {
     if (input instanceof Array) return new Requirement(...input);
     if (input instanceof Version) return new Requirement(input);
     try {
-      return new Requirement(input.toString());
+      return new Requirement(copystr(input.toString()));
     } catch (_) {
       return Requirement.default();
     }
@@ -196,7 +198,7 @@ export class Requirement {
 
     let objStr;
     try {
-      objStr = obj.toString();
+      objStr = copystr(obj.toString());
     } catch (_) {
       err();
     }
