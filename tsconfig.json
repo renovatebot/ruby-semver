@@ -4,7 +4,7 @@
     "declarationDir": "./dist",
     "module": "commonjs",
     "noImplicitAny": true,
-    "lib": ["es2017", "es7", "es6", "dom"],
+    "lib": ["es2017"],
     "outDir": "./dist",
     "target": "es5",
     "moduleResolution": "node"
