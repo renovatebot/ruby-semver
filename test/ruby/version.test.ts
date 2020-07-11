@@ -130,7 +130,7 @@ test('test_equals2', () => {
 //     assert_version_equal "1", 1
 //   end
 test('test_initialize', () => {
-  ['1.0', '1.0 ', ' 1.0 ', '1.0\n', '\n1.0\n', '1.0'].forEach(good => {
+  ['1.0', '1.0 ', ' 1.0 ', '1.0\n', '\n1.0\n', '1.0'].forEach((good) => {
     assertVersionEqual('1.0', good);
   });
 });
@@ -163,7 +163,7 @@ test('test_initialize_invalid', () => {
     '2.3422222.222.222222222.22222.ads0as.dasd0.ddd2222.2.qd3e.',
   ];
 
-  invalidVersions.forEach(invalid => {
+  invalidVersions.forEach((invalid) => {
     expect(() => {
       // eslint-disable-next-line no-new
       new Version(invalid);
@@ -186,7 +186,7 @@ test('test_initialize_invalid', () => {
 //     end
 //   end
 test('test_empty_version', () => {
-  ['', '   ', ' '].forEach(empty => {
+  ['', '   ', ' '].forEach((empty) => {
     expect(v(empty).version()).toEqual('0');
   });
 });
@@ -349,7 +349,10 @@ test('test_canonical_segments', () => {
   expect(v('1.0.0.a.1.0').canonicalSegments()).toEqual([1, 'a', 1]);
   expect(v('1.2.3-1').canonicalSegments()).toEqual([1, 2, 3, 'pre', 1]);
 
-  expect(v('1.2.3-1').splitSegments()).toEqual([[1, 2, 3], ['pre', 1]]);
+  expect(v('1.2.3-1').splitSegments()).toEqual([
+    [1, 2, 3],
+    ['pre', 1],
+  ]);
 });
 
 //   # Asserts that +version+ is a prerelease.
@@ -364,11 +367,7 @@ test('test_canonical_segments', () => {
 //     assert_equal expected, v(version).approximate_recommendation
 //   end
 function assertApproximateEqual(expected: string, version: string) {
-  expect(
-    v(version)
-      .approximateRecommendation()
-      .toString()
-  ).toEqual(expected);
+  expect(v(version).approximateRecommendation().toString()).toEqual(expected);
 }
 
 //   # Assert that the "approximate" recommendation for +version+ satifies +version+.
@@ -386,12 +385,7 @@ function assertApproximateEqual(expected: string, version: string) {
 //     assert_version_equal expected, v(unbumped).bump
 //   end
 function assertBumpedVersionEqual(expected: string, unbumped: string) {
-  assertVersionEqual(
-    expected,
-    v(unbumped)
-      .bump()
-      .toString()
-  );
+  assertVersionEqual(expected, v(unbumped).bump().toString());
 }
 
 //   # Assert that +release+ is the correct non-prerelease +version+.
@@ -400,12 +394,7 @@ function assertBumpedVersionEqual(expected: string, unbumped: string) {
 //     assert_version_equal release, v(version).release
 //   end
 function assertReleaseEqual(release: string, version: string) {
-  assertVersionEqual(
-    release,
-    v(version)
-      .release()
-      .toString()
-  );
+  assertVersionEqual(release, v(version).release().toString());
 }
 
 //   # Assert that two versions are equal. Handles strings or
