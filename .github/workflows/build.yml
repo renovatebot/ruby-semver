@@ -103,9 +103,6 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: E2E Test
-        run: yarn test-e2e
-
   lint:
     runs-on: ubuntu-latest
 
