@@ -25,6 +25,9 @@
     "test": "run-s lint type-check jest",
     "type-check": "tsc --noEmit"
   },
+  "dependencies": {
+    "tslib": "2.0.0"
+  },
   "devDependencies": {
     "@types/jest": "26.0.4",
     "@typescript-eslint/eslint-plugin": "3.6.0",
