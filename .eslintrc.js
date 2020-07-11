@@ -13,6 +13,7 @@ module.exports = {
     ecmaVersion: 9,
     tsconfigRootDir: __dirname,
     project: './tsconfig.lint.json',
+    extraFileExtensions: ['.mjs'],
   },
   rules: {
     'import/no-unresolved': 0, // done by typescript
