@@ -40,7 +40,7 @@ function flatten(input: any[]): any[] {
 const defaultEql = (x: any, y: any): boolean => x === y;
 function uniq(array: any[], eql = defaultEql): any[] {
   return array.filter((x, idx, arr) => {
-    return arr.findIndex(y => eql(x, y)) === idx;
+    return arr.findIndex((y) => eql(x, y)) === idx;
   });
 }
 
@@ -235,12 +235,12 @@ export class Requirement {
   //   end
   constructor(...requirements: RawRequirement[]) {
     const flattened = flatten(requirements);
-    const compacted = flattened.filter(x => x !== null);
+    const compacted = flattened.filter((x) => x !== null);
     const unique = uniq(compacted);
     if (unique.length === 0) {
       this._requirements = [Requirement.DEFAULT_REQUIREMENT];
     } else {
-      this._requirements = unique.map(r => Requirement.parse(r));
+      this._requirements = unique.map((r) => Requirement.parse(r));
     }
   }
 
@@ -257,10 +257,10 @@ export class Requirement {
   //   end
   concat(newReqs: RawRequirement[]): void {
     const flattened = flatten(newReqs);
-    const compacted = flattened.filter(x => x !== null);
+    const compacted = flattened.filter((x) => x !== null);
     const unique = uniq(compacted);
-    const parsed = unique.map(x => Requirement.parse(x));
-    parsed.forEach(x => this._requirements.push(x));
+    const parsed = unique.map((x) => Requirement.parse(x));
+    parsed.forEach((x) => this._requirements.push(x));
   }
 
   //

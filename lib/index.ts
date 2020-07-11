@@ -148,5 +148,5 @@ export function prerelease(v: string): string[] | null {
   const version = Version.create(v);
   if (!version) return null;
   const [, segments] = version.splitSegments();
-  return segments.length ? segments.map(x => x.toString()) : null;
+  return segments.length ? segments.map((x) => x.toString()) : null;
 }

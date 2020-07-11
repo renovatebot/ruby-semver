@@ -1,7 +1,6 @@
 module.exports = {
   env: {
     node: true,
-    jest: true,
   },
   extends: [
     'plugin:promise/recommended',
@@ -12,7 +11,8 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 9,
-    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+    project: './tsconfig.lint.json',
   },
   rules: {
     'import/no-unresolved': 0, // done by typescript
@@ -42,4 +42,30 @@ module.exports = {
       },
     ], // disable until proper interfaced api
   },
+  overrides: [
+    {
+      files: ['**/*.test.ts'],
+      env: {
+        jest: true,
+      },
+      rules: {
+        'prefer-destructuring': 0,
+        'prefer-promise-reject-errors': 0,
+        'import/no-dynamic-require': 0,
+        'global-require': 0,
+
+        '@typescript-eslint/no-var-requires': 0,
+        '@typescript-eslint/no-object-literal-type-assertion': 0,
+        '@typescript-eslint/explicit-function-return-type': 0,
+        '@typescript-eslint/unbound-method': 0,
+      },
+    },
+    {
+      files: ['**/*.mjs'],
+
+      rules: {
+        '@typescript-eslint/explicit-function-return-type': 0,
+      },
+    },
+  ],
 };

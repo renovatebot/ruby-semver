@@ -286,7 +286,7 @@ export class Version {
   //   end
   bump(): Version {
     const segments = this.getSegments();
-    while (segments.findIndex(x => typeof x === 'string') !== -1)
+    while (segments.findIndex((x) => typeof x === 'string') !== -1)
       segments.pop();
 
     let lastIdx = segments.length - 2;
@@ -387,7 +387,7 @@ export class Version {
   release(): Version {
     if (this.isPrerelease()) {
       const segments = this.getSegments();
-      while (segments.findIndex(x => typeof x === 'string') !== -1)
+      while (segments.findIndex((x) => typeof x === 'string') !== -1)
         segments.pop();
       return new Version(segments.join('.'));
     }
@@ -415,7 +415,7 @@ export class Version {
   //   end
   approximateRecommendation(): string {
     const segments = this.getSegments();
-    while (segments.findIndex(x => typeof x === 'string') !== -1)
+    while (segments.findIndex((x) => typeof x === 'string') !== -1)
       segments.pop();
     while (segments.length > 2) segments.pop();
     while (segments.length < 2) segments.push(0);
@@ -513,9 +513,9 @@ export class Version {
   //       end.reduce(&:concat)
   //   end
   canonicalSegments(): SegmentElement[] {
-    const canonicals = this.splitSegments().map(segments => {
+    const canonicals = this.splitSegments().map((segments) => {
       const segmentsReverse = segments.reverse();
-      const sliceIdx = segmentsReverse.findIndex(s => s !== 0);
+      const sliceIdx = segmentsReverse.findIndex((s) => s !== 0);
       return segmentsReverse.slice(sliceIdx).reverse();
     });
     return Array.prototype.concat.apply([], canonicals);
@@ -540,7 +540,7 @@ export class Version {
   getSegments(): SegmentElement[] {
     return this._version
       .match(/[0-9]+|[a-z]+/gi)
-      .map(s => (/^\d+$/.test(s) ? parseInt(s, 10) : copystr(s)));
+      .map((s) => (/^\d+$/.test(s) ? parseInt(s, 10) : copystr(s)));
   }
 
   //   def _split_segments
@@ -550,7 +550,9 @@ export class Version {
   //     return numeric_segments, string_segments
   //   end
   splitSegments(): [number[], SegmentElement[]] {
-    let stringStart = this.getSegments().findIndex(x => typeof x === 'string');
+    let stringStart = this.getSegments().findIndex(
+      (x) => typeof x === 'string'
+    );
     stringStart = stringStart === -1 ? null : stringStart;
 
     const stringSegments = this.getSegments();

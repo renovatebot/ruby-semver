@@ -22,7 +22,10 @@ const req = (...x: any) => Requirement.create(...x);
 test('test_concat', () => {
   const r = req('>= 1');
   r.concat(['< 2']);
-  expect(r._requirements).toEqual([['>=', v(1)], ['<', v(2)]]);
+  expect(r._requirements).toEqual([
+    ['>=', v(1)],
+    ['<', v(2)],
+  ]);
 });
 
 //   def test_equals2
@@ -152,7 +155,7 @@ test('test_parse', () => {
 //   end
 test('test_parse_bad', () => {
   const invalidRequirements = [null, '', '! 1', '= junk', '1..2'];
-  invalidRequirements.forEach(bad => {
+  invalidRequirements.forEach((bad) => {
     expect(() => Requirement.parse(bad)).toThrow(
       `Illformed requirement [${bad}]`
     );
@@ -447,7 +450,7 @@ test('test_satisfied_by_eh_good', () => {
 //     end
 //   end
 test('test_illformed_requirements', () => {
-  ['>>> 1.3.5', '> blah'].forEach(rq => {
+  ['>>> 1.3.5', '> blah'].forEach((rq) => {
     expect(() => new Requirement(rq)).toThrow();
   });
 });
