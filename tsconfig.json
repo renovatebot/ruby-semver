@@ -4,10 +4,11 @@
     "declarationDir": "./dist",
     "module": "commonjs",
     "noImplicitAny": true,
-    "lib": ["es2017"],
+    "lib": ["es2018"],
     "outDir": "./dist",
-    "target": "es5",
-    "moduleResolution": "node"
+    "target": "es2018",
+    "moduleResolution": "node",
+    "importHelpers": true
   },
   "typedocOptions": {
     "mode": "modules",

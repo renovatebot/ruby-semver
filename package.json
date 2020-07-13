@@ -17,13 +17,16 @@
     "eslint": "eslint --ext .js,.ts lib/ test/",
     "eslint-fix": "eslint --ext .js,.ts --fix lib/ test/",
     "jest": "jest --coverage",
-    "jest-debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "jest-debug": "node --expose-gc --inspect-brk node_modules/jest/bin/jest --runInBand",
     "lint": "run-s eslint prettier",
     "lint-fix": "run-s eslint-fix prettier-fix",
     "prettier": "prettier --list-different \"**/*.{ts,js,json,md}\"",
     "prettier-fix": "prettier --write \"**/*.{ts,js,json,md}\"",
     "test": "run-s lint type-check jest",
     "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "tslib": "2.0.0"
   },
   "devDependencies": {
     "@types/jest": "26.0.4",
