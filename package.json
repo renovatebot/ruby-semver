@@ -30,8 +30,8 @@
   },
   "devDependencies": {
     "@types/jest": "26.0.8",
-    "@typescript-eslint/eslint-plugin": "3.7.1",
-    "@typescript-eslint/parser": "3.7.1",
+    "@typescript-eslint/eslint-plugin": "3.8.0",
+    "@typescript-eslint/parser": "3.8.0",
     "babel-jest": "26.2.2",
     "babel-plugin-dynamic-import-node": "2.3.3",
     "codecov": "3.7.2",
