@@ -2,4 +2,4 @@
 
 # ruby-semver
 
-TODO: Explain what this repo is about.
+Ruby SemVer in TypeScript.
