@@ -7,7 +7,6 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'airbnb-typescript/base',
     'prettier',
-    'prettier/@typescript-eslint',
   ],
   parserOptions: {
     ecmaVersion: 9,
