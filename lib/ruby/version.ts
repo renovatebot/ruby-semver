@@ -192,7 +192,7 @@ export class Version {
   //
   //     !!(version.to_s =~ ANCHORED_VERSION_PATTERN)
   //   end
-  static isCorrect(version: any): boolean {
+  static isCorrect(version: unknown): boolean {
     let versionStr;
     try {
       versionStr = copystr(version.toString());
@@ -220,7 +220,7 @@ export class Version {
   //       new input
   //     end
   //   end
-  static create(input: any): Version | null {
+  static create(input: unknown): Version | null {
     if (input instanceof Version) return input;
     if (input === null) return null;
     try {
@@ -254,7 +254,7 @@ export class Version {
   //     @version = version.to_s.strip.gsub("-",".pre.")
   //     @segments = nil
   //   end
-  constructor(version: any) {
+  constructor(version: unknown) {
     if (!Version.isCorrect(version)) {
       throw new Error(`Malformed version number string ${version}`);
     }

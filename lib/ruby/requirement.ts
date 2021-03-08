@@ -39,9 +39,7 @@ function flatten(input: any[]): any[] {
 // TODO: consider richer `eql` semantics
 const defaultEql = (x: any, y: any): boolean => x === y;
 function uniq(array: any[], eql = defaultEql): any[] {
-  return array.filter((x, idx, arr) => {
-    return arr.findIndex((y) => eql(x, y)) === idx;
-  });
+  return array.filter((x, idx, arr) => arr.findIndex((y) => eql(x, y)) === idx);
 }
 
 function reqsEql(
@@ -189,7 +187,7 @@ export class Requirement {
   //       [$1 || "=", Gem::Version.new($2)]
   //     end
   //   end
-  static parse(obj: any): ParsedRequirement {
+  static parse(obj: unknown): ParsedRequirement {
     const err = (): void => {
       throw new Error(`Illformed requirement [${obj}]`);
     };
