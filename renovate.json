@@ -1,14 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>renovatebot/presets-internal:docker-images"],
+  "extends": ["github>renovatebot/.github"],
   "packageRules": [
     {
       "depTypeList": ["dependencies"],
       "extends": [":automergePatch"]
-    },
-    {
-      "updateTypes": ["major"],
-      "masterIssueApproval": true
     },
     {
       "packageNames": ["prettier"],
