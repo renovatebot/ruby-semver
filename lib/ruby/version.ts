@@ -163,7 +163,8 @@ const copystr = (x: string): string => (' ' + x).slice(1);
 export class Version {
   //   VERSION_PATTERN =     '[0-9]+(?>\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?'.freeze # :nodoc:
   //   ANCHORED_VERSION_PATTERN =                /\A\s*(#{VERSION_PATTERN})?\s*\z/.freeze # :nodoc:
-  static ANCHORED_VERSION_PATTERN = /^\s*([0-9]+(\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?)?\s*$/;
+  static ANCHORED_VERSION_PATTERN =
+    /^\s*([0-9]+(\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?)?\s*$/;
 
   private readonly _version: string;
 

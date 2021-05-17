@@ -80,7 +80,8 @@ export class Requirement {
   //   # A regular expression that matches a requirement
   //
   //   PATTERN = /\A#{PATTERN_RAW}\z/.freeze
-  static PATTERN = /^\s*(=|!=|>|<|>=|<=|~>)?\s*([0-9]+(\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?)\s*$/;
+  static PATTERN =
+    /^\s*(=|!=|>|<|>=|<=|~>)?\s*([0-9]+(\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?)\s*$/;
 
   //   ##
   //   # The default requirement matches any non-prerelease version
