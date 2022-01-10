@@ -13,7 +13,7 @@ module.exports = {
     'plugin:import/typescript',
   ],
   parserOptions: {
-    project: ['tsconfig.lint.json'],
+    project: ['tsconfig.json'],
   },
   rules: {
     // TypeScript makes these safe & effective

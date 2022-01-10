@@ -12,7 +12,7 @@ import {
   prerelease,
   satisfies,
   valid,
-} from '../lib';
+} from '.';
 
 function checkAsymmetric<T>(
   op: (x: T, y: T) => boolean | null,
