@@ -1,5 +1,5 @@
-import { Version } from './ruby/version';
 import { Requirement } from './ruby/requirement';
+import { Version } from './ruby/version';
 
 export type ReleaseType =
   | 'major'
@@ -13,52 +13,57 @@ export type ReleaseType =
 /**
  * v1 == v2 This is true if they're logically equivalent, even if they're not the exact same string. You already know how to compare strings.
  */
-export function eq(v1: string, v2: string): boolean {
+export function eq(v1: string, v2: string): boolean | null {
   const x = Version.create(v1);
   const y = Version.create(v2);
+  if (x === null || y === null) return null;
   return x.compare(y) === 0;
 }
 
 /**
  * v1 > v2
  */
-export function gt(v1: string, v2: string): boolean {
+export function gt(v1: string, v2: string): boolean | null {
   const x = Version.create(v1);
   const y = Version.create(v2);
+  if (x === null || y === null) return null;
   return x.compare(y) === 1;
 }
 
 /**
  * v1 >= v2
  */
-export function gte(v1: string, v2: string): boolean {
+export function gte(v1: string, v2: string): boolean | null {
   const x = Version.create(v1);
   const y = Version.create(v2);
+  if (x === null || y === null) return null;
   return x.compare(y) !== -1;
 }
 
 /**
  * v1 > v2
  */
-export function lt(v1: string, v2: string): boolean {
+export function lt(v1: string, v2: string): boolean | null {
   const x = Version.create(v1);
   const y = Version.create(v2);
+  if (x === null || y === null) return null;
   return x.compare(y) === -1;
 }
 
 /**
  * v1 >= v2
  */
-export function lte(v1: string, v2: string): boolean {
+export function lte(v1: string, v2: string): boolean | null {
   const x = Version.create(v1);
   const y = Version.create(v2);
+  if (x === null || y === null) return null;
   return x.compare(y) !== 1;
 }
 
 /**
  * Return the parsed version, or null if it's not valid.
  */
-export function valid(version: string): string | null {
+export function valid(version: unknown): string | null {
   if (!version) return null;
   return Version.isCorrect(version) ? version : null;
 }
@@ -83,7 +88,7 @@ export function maxSatisfying(
   versions: string[],
   range: string
 ): string | null {
-  return versions.reduce((x, y) => {
+  return versions.reduce<string | null>((x, y) => {
     const isValid = satisfies(y, range);
     if (isValid && (!x || lt(x, y))) return y;
     return x;
@@ -97,7 +102,7 @@ export function minSatisfying(
   versions: string[],
   range: string
 ): string | null {
-  return versions.reduce((x, y) => {
+  return versions.reduce<string | null>((x, y) => {
     const isValid = satisfies(y, range);
     if (isValid && (!x || gt(x, y))) return y;
     return x;
@@ -107,19 +112,19 @@ export function minSatisfying(
 /**
  * Return the major version number.
  */
-export function major(v: string): number {
+export function major(v: unknown): number | null {
   if (!v) return null;
   const version = Version.create(v);
   if (!version) return null;
   const [segments] = version.splitSegments();
   const [x] = segments;
-  return x;
+  return x ?? null;
 }
 
 /**
  * Return the minor version number.
  */
-export function minor(v: string): number {
+export function minor(v: unknown): number | null {
   if (!v) return null;
   const version = Version.create(v);
   if (!version) return null;
@@ -131,7 +136,7 @@ export function minor(v: string): number {
 /**
  * Return the patch version number.
  */
-export function patch(v: string): number {
+export function patch(v: unknown): number | null {
   if (!v) return null;
   const version = Version.create(v);
   if (!version) return null;
@@ -143,7 +148,7 @@ export function patch(v: string): number {
 /**
  * Returns an array of prerelease components, or null if none exist.
  */
-export function prerelease(v: string): string[] | null {
+export function prerelease(v: unknown): string[] | null {
   if (!v) return null;
   const version = Version.create(v);
   if (!version) return null;

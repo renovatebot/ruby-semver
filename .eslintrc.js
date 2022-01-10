@@ -1,71 +1,61 @@
 module.exports = {
-  env: {
-    node: true,
-  },
+  root: true,
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', '@renovate'],
   extends: [
-    'plugin:promise/recommended',
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
-    'airbnb-typescript/base',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:import/typescript',
   ],
   parserOptions: {
-    ecmaVersion: 9,
-    tsconfigRootDir: __dirname,
-    project: './tsconfig.lint.json',
-    extraFileExtensions: ['.mjs'],
+    project: ['tsconfig.lint.json'],
   },
   rules: {
-    'import/no-unresolved': 0, // done by typescript
-    'import/prefer-default-export': 0, // no benefit
-    'require-await': 'error',
-    'no-use-before-define': 0,
-    'no-restricted-syntax': 0,
-    'no-await-in-loop': 0,
-    'prefer-destructuring': 'off',
-    'prefer-template': 'off',
-    'no-underscore-dangle': 0,
+    // TypeScript makes these safe & effective
+    'no-case-declarations': 'off',
 
-    // TODO: fix lint
-    '@typescript-eslint/camelcase': 'off', // disabled until ??
-    '@typescript-eslint/no-var-requires': 'off', // disable until all files converted to typescript
-    '@typescript-eslint/no-use-before-define': 'off', // disable until all files converted to typescript
-    '@typescript-eslint/explicit-member-accessibility': 0,
-    '@typescript-eslint/explicit-function-return-type': 0,
-    '@typescript-eslint/no-explicit-any': 0,
-    '@typescript-eslint/no-non-null-assertion': 0,
+    // Same approach used by TypeScript noUnusedLocals
     '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        varsIgnorePattern: '^_',
+        argsIgnorePattern: '^_',
+      },
+    ],
+
+    '@renovate/jest-root-describe': 2,
+
+    'import/default': 0,
+    'import/named': 0,
+    'import/namespace': 0,
+    'import/no-named-as-default-member': 0,
+    'import/prefer-default-export': 0,
+    'sort-imports': [
       'error',
       {
-        vars: 'all',
-        args: 'none',
-        ignoreRestSiblings: false,
+        ignoreCase: false,
+        ignoreDeclarationSort: true,
+        ignoreMemberSort: false,
+        memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
       },
-    ], // disable until proper interfaced api
+    ],
+    'import/order': [
+      'error',
+      {
+        alphabetize: {
+          order: 'asc',
+        },
+      },
+    ],
   },
-  overrides: [
-    {
-      files: ['**/*.test.ts'],
-      env: {
-        jest: true,
-      },
-      rules: {
-        'prefer-destructuring': 0,
-        'prefer-promise-reject-errors': 0,
-        'import/no-dynamic-require': 0,
-        'global-require': 0,
-
-        '@typescript-eslint/no-var-requires': 0,
-        '@typescript-eslint/no-object-literal-type-assertion': 0,
-        '@typescript-eslint/explicit-function-return-type': 0,
-        '@typescript-eslint/unbound-method': 0,
-      },
+  settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts'],
     },
-    {
-      files: ['**/*.mjs'],
-
-      rules: {
-        '@typescript-eslint/explicit-function-return-type': 0,
-      },
-    },
-  ],
+  },
 };

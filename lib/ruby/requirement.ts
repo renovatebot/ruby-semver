@@ -16,30 +16,37 @@
 
 import { Version } from './version';
 
-export type RawRequirement = Version | string | null;
 export type ParsedRequirement = [string, Version];
 
+type Nested<T> = T[] | (T | Nested<T>)[];
 /**
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat#Alternative
  */
-function flatten(input: any[]): any[] {
+function flatten<T = unknown>(input: Nested<T>): T[] {
   const stack = [...input];
-  const res = [];
-  while (stack.length) {
-    const next = stack.pop();
+  const res: T[] = [];
+  let next = stack.pop();
+  while (next) {
     if (Array.isArray(next)) {
       stack.push(...next);
     } else {
       res.push(next);
     }
+    next = stack.pop();
   }
   return res.reverse();
 }
 
-// TODO: consider richer `eql` semantics
-const defaultEql = (x: any, y: any): boolean => x === y;
-function uniq(array: any[], eql = defaultEql): any[] {
-  return array.filter((x, idx, arr) => arr.findIndex((y) => eql(x, y)) === idx);
+function defaultEql<T = unknown>(x: T, y: T): boolean {
+  return x === y;
+}
+function uniq<T = unknown>(
+  array: T[],
+  eql: (x: T, y: T) => boolean = defaultEql
+): T[] {
+  return array.filter(
+    (x, idx, arr): boolean => arr.findIndex((y) => eql(x, y)) === idx
+  );
 }
 
 function reqsEql(
@@ -49,7 +56,9 @@ function reqsEql(
 ): boolean {
   if (xReqs.length !== yReqs.length) return false;
   for (let idx = 0; idx < xReqs.length; idx += 1) {
-    if (!eql(xReqs[idx], yReqs[idx])) return false;
+    const xReq = xReqs[idx] as ParsedRequirement;
+    const yReq = yReqs[idx] as ParsedRequirement;
+    if (!eql(xReq, yReq)) return false;
   }
   return true;
 }
@@ -130,14 +139,14 @@ export class Requirement {
   //       end
   //     end
   //   end
-  static create(...inputs: any[]): Requirement {
+  static create(...inputs: unknown[]): Requirement {
     if (inputs.length > 1) return new Requirement(...inputs);
     const input = inputs.shift();
     if (input instanceof Requirement) return input;
-    if (input instanceof Array) return new Requirement(...input);
+    if (input instanceof Array) return new Requirement(...(input as unknown[]));
     if (input instanceof Version) return new Requirement(input);
     try {
-      return new Requirement(copystr(input.toString()));
+      return new Requirement(copystr(String(input)));
     } catch (_) {
       return Requirement.default();
     }
@@ -188,22 +197,12 @@ export class Requirement {
   //       [$1 || "=", Gem::Version.new($2)]
   //     end
   //   end
-  static parse(obj: unknown): ParsedRequirement {
-    const err = (): void => {
-      throw new Error(`Illformed requirement [${obj}]`);
-    };
-
+  static parse(this: void, obj: unknown): ParsedRequirement {
     if (obj instanceof Version) return ['=', obj];
 
-    let objStr;
-    try {
-      objStr = copystr(obj.toString());
-    } catch (_) {
-      err();
-    }
-
+    const objStr = copystr(String(obj));
     const match = objStr.match(Requirement.PATTERN);
-    if (!match) err();
+    if (!match) throw new Error(`Illformed requirement [${String(obj)}]`);
 
     const [, $1, $2] = match;
     return [$1 || '=', new Version($2)];
@@ -232,7 +231,7 @@ export class Requirement {
   //       @requirements = requirements.map! { |r| self.class.parse r }
   //     end
   //   end
-  constructor(...requirements: RawRequirement[]) {
+  constructor(...requirements: unknown[]) {
     const flattened = flatten(requirements);
     const compacted = flattened.filter((x) => x !== null);
     const unique = uniq(compacted);
@@ -254,7 +253,7 @@ export class Requirement {
   //
   //     @requirements.concat new
   //   end
-  concat(newReqs: RawRequirement[]): void {
+  concat(newReqs: unknown[]): void {
     const flattened = flatten(newReqs);
     const compacted = flattened.filter((x) => x !== null);
     const unique = uniq(compacted);
@@ -290,7 +289,8 @@ export class Requirement {
   //   end
   isNone(): boolean {
     if (this._requirements.length === 1) {
-      const [op, v] = this._requirements[0];
+      const req: ParsedRequirement = this._requirements[0] as never;
+      const [op, v] = req;
       return (
         op === Requirement.DEFAULT_REQUIREMENT[0] &&
         v.compare(Requirement.DEFAULT_REQUIREMENT[1]) === 0
@@ -418,7 +418,8 @@ export class Requirement {
   //   end
   isSpecific(): boolean {
     if (this._requirements.length > 1) return true;
-    const firstOp = this._requirements[0][0];
+    const req: ParsedRequirement = this._requirements[0] as never;
+    const [firstOp] = req;
     return !(firstOp === '>' || firstOp === '>=');
   }
 

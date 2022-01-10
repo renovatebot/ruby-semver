@@ -193,14 +193,8 @@ export class Version {
   //
   //     !!(version.to_s =~ ANCHORED_VERSION_PATTERN)
   //   end
-  static isCorrect(version: unknown): boolean {
-    let versionStr;
-    try {
-      versionStr = copystr(version.toString());
-    } catch (_) {
-      return false;
-    }
-
+  static isCorrect(version: unknown): version is string {
+    const versionStr = copystr(String(version));
     return Version.ANCHORED_VERSION_PATTERN.test(versionStr);
   }
 
@@ -221,7 +215,7 @@ export class Version {
   //       new input
   //     end
   //   end
-  static create(input: unknown): Version | null {
+  static create(this: void, input: unknown): Version | null {
     if (input instanceof Version) return input;
     if (input === null) return null;
     try {
@@ -257,10 +251,10 @@ export class Version {
   //   end
   constructor(version: unknown) {
     if (!Version.isCorrect(version)) {
-      throw new Error(`Malformed version number string ${version}`);
+      throw new Error(`Malformed version number string ${String(version)}`);
     }
 
-    let versionStr = copystr(version.toString());
+    let versionStr = copystr(String(version));
 
     if (/^\s*$/.test(versionStr)) {
       versionStr = '0';
@@ -458,10 +452,10 @@ export class Version {
   //
   //     return 0
   //   end
-  compare(other: Version): number {
+  compare(other: Version | null): number | null {
     if (other === null) return null;
 
-    const segEq = (x: any, y: any): boolean => {
+    const segEq = (x: unknown[], y: unknown[]): boolean => {
       if (x.length !== y.length) return false;
       for (let idx = 0; idx < x.length; idx += 1) {
         if (x[idx] !== y[idx]) return false;
@@ -514,12 +508,18 @@ export class Version {
   //       end.reduce(&:concat)
   //   end
   canonicalSegments(): SegmentElement[] {
-    const canonicals = this.splitSegments().map((segments) => {
-      const segmentsReverse = segments.reverse();
-      const sliceIdx = segmentsReverse.findIndex((s) => s !== 0);
-      return segmentsReverse.slice(sliceIdx).reverse();
-    });
-    return Array.prototype.concat.apply([], canonicals);
+    const result: SegmentElement[] = [];
+    const canonicals: SegmentElement[][] = this.splitSegments().map(
+      (segments) => {
+        const segmentsReverse = segments.reverse();
+        const sliceIdx = segmentsReverse.findIndex((s) => s !== 0);
+        return segmentsReverse.slice(sliceIdx).reverse();
+      }
+    );
+    for (const canonical of canonicals) {
+      result.push(...canonical);
+    }
+    return result;
   }
 
   //
@@ -539,9 +539,8 @@ export class Version {
   //     end.freeze
   //   end
   getSegments(): SegmentElement[] {
-    return this._version
-      .match(/[0-9]+|[a-z]+/gi)
-      .map((s) => (/^\d+$/.test(s) ? parseInt(s, 10) : copystr(s)));
+    const match = this._version.match(/[0-9]+|[a-z]+/gi) ?? [];
+    return match.map((s) => (/^\d+$/.test(s) ? parseInt(s, 10) : copystr(s)));
   }
 
   //   def _split_segments
@@ -551,7 +550,7 @@ export class Version {
   //     return numeric_segments, string_segments
   //   end
   splitSegments(): [number[], SegmentElement[]] {
-    let stringStart = this.getSegments().findIndex(
+    let stringStart: number | null = this.getSegments().findIndex(
       (x) => typeof x === 'string'
     );
     stringStart = stringStart === -1 ? null : stringStart;
