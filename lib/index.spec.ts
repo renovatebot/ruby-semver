@@ -18,7 +18,7 @@ function checkAsymmetric<T>(
   op: (x: T, y: T) => boolean | null,
   left: T,
   right: T,
-  result: boolean | null = true
+  result = true
 ) {
   expect(op(left, right)).toBe(result);
   expect(op(right, left)).toBe(!result);
@@ -28,7 +28,7 @@ function checkSymmetric<T>(
   op: (x: T, y: T) => boolean | null,
   left: T,
   right: T,
-  result: boolean | null = true
+  result = true
 ) {
   expect(op(left, right)).toBe(result);
   expect(op(right, left)).toBe(result);
@@ -36,7 +36,7 @@ function checkSymmetric<T>(
 
 describe('index', () => {
   test('eq', () => {
-    checkSymmetric(eq, 'foobar', '1', null);
+    checkSymmetric(eq, 'foobar', '1', false);
 
     checkSymmetric(eq, '1.0.0', '1');
     checkSymmetric(eq, '1.0.0', '1.0');
@@ -45,7 +45,7 @@ describe('index', () => {
   });
 
   test('gt', () => {
-    checkSymmetric(gt, 'foobar', '1', null);
+    checkSymmetric(gt, 'foobar', '1', false);
 
     checkAsymmetric(gt, '2', '1');
     checkAsymmetric(gt, '2.2', '2.1');
@@ -61,7 +61,7 @@ describe('index', () => {
   });
 
   test('gte', () => {
-    checkSymmetric(gte, 'foobar', '1', null);
+    checkSymmetric(gte, 'foobar', '1', false);
 
     checkSymmetric(gte, '1.0.0', '1');
     checkSymmetric(gte, '1.0.0', '1.0');
@@ -82,7 +82,7 @@ describe('index', () => {
   });
 
   test('lt', () => {
-    checkSymmetric(lt, 'foobar', '1', null);
+    checkSymmetric(lt, 'foobar', '1', false);
 
     checkAsymmetric(lt, '2', '1', false);
     checkAsymmetric(lt, '2.2', '2.1', false);
@@ -98,7 +98,7 @@ describe('index', () => {
   });
 
   test('lte', () => {
-    checkSymmetric(lte, 'foobar', '1', null);
+    checkSymmetric(lte, 'foobar', '1', false);
 
     checkSymmetric(lte, '1.0.0', '1');
     checkSymmetric(lte, '1.0.0', '1.0');

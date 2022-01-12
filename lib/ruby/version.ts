@@ -155,6 +155,14 @@ export type SegmentElement = string | number;
 
 const copystr = (x: string): string => (' ' + x).slice(1);
 
+function segEq<T = unknown>(x: T[], y: T[]): boolean {
+  if (x.length !== y.length) return false;
+  for (let idx = 0; idx < x.length; idx += 1) {
+    if (x[idx] !== y[idx]) return false;
+  }
+  return true;
+}
+
 // class Gem::Version
 //
 //   autoload :Requirement, 'rubygems/requirement'
@@ -452,17 +460,7 @@ export class Version {
   //
   //     return 0
   //   end
-  compare(other: Version | null): number | null {
-    if (other === null) return null;
-
-    const segEq = (x: unknown[], y: unknown[]): boolean => {
-      if (x.length !== y.length) return false;
-      for (let idx = 0; idx < x.length; idx += 1) {
-        if (x[idx] !== y[idx]) return false;
-      }
-      return true;
-    };
-
+  compare(other: Version): number {
     if (
       this._version === other._version ||
       segEq(this.canonicalSegments(), other.canonicalSegments())

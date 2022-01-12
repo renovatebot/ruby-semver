@@ -13,50 +13,50 @@ export type ReleaseType =
 /**
  * v1 == v2 This is true if they're logically equivalent, even if they're not the exact same string. You already know how to compare strings.
  */
-export function eq(v1: string, v2: string): boolean | null {
+export function eq(v1: string, v2: string): boolean {
   const x = Version.create(v1);
   const y = Version.create(v2);
-  if (x === null || y === null) return null;
+  if (!x || !y) return false;
   return x.compare(y) === 0;
 }
 
 /**
  * v1 > v2
  */
-export function gt(v1: string, v2: string): boolean | null {
+export function gt(v1: string, v2: string): boolean {
   const x = Version.create(v1);
   const y = Version.create(v2);
-  if (x === null || y === null) return null;
+  if (!x || !y) return false;
   return x.compare(y) === 1;
 }
 
 /**
  * v1 >= v2
  */
-export function gte(v1: string, v2: string): boolean | null {
+export function gte(v1: string, v2: string): boolean {
   const x = Version.create(v1);
   const y = Version.create(v2);
-  if (x === null || y === null) return null;
+  if (!x || !y) return false;
   return x.compare(y) !== -1;
 }
 
 /**
  * v1 > v2
  */
-export function lt(v1: string, v2: string): boolean | null {
+export function lt(v1: string, v2: string): boolean {
   const x = Version.create(v1);
   const y = Version.create(v2);
-  if (x === null || y === null) return null;
+  if (!x || !y) return false;
   return x.compare(y) === -1;
 }
 
 /**
  * v1 >= v2
  */
-export function lte(v1: string, v2: string): boolean | null {
+export function lte(v1: string, v2: string): boolean {
   const x = Version.create(v1);
   const y = Version.create(v2);
-  if (x === null || y === null) return null;
+  if (!x || !y) return false;
   return x.compare(y) !== 1;
 }
 

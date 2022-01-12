@@ -271,8 +271,6 @@ describe('ruby/version', () => {
 
     assertVersionOrder('5.a', '5.0.0.rc2', -1);
     assertVersionOrder('5.x', '5.0.0.rc2', 1);
-
-    expect(v('1.0').compare(null)).toBe(null);
   });
 
   //   def test_approximate_recommendation

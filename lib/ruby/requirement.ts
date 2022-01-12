@@ -1,7 +1,5 @@
 // https://github.com/ruby/ruby/blob/d4a86e407ec2057c2c7ad757aa76dad757f34c3a/lib/rubygems/requirement.rb
 
-// import { Version } from "./version";
-
 // # frozen_string_literal: true
 // require "rubygems/version"
 // require "rubygems/deprecate"
