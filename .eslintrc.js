@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
@@ -13,7 +14,8 @@ module.exports = {
     'plugin:import/typescript',
   ],
   parserOptions: {
-    project: ['tsconfig.json'],
+    createDefaultProgram: true,
+    project: ['tsconfig.lint.json'],
   },
   rules: {
     // TypeScript makes these safe & effective
@@ -21,7 +23,7 @@ module.exports = {
 
     // Same approach used by TypeScript noUnusedLocals
     '@typescript-eslint/no-unused-vars': [
-      'warn',
+      'error',
       {
         varsIgnorePattern: '^_',
         argsIgnorePattern: '^_',
