@@ -112,7 +112,7 @@ jobs:
 
       - name: Lint
         run: |
-          yarn eslint s-f gha
+          yarn eslint -f gha
           yarn prettier
 
       - name: Type check
