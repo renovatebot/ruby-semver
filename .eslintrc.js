@@ -2,10 +2,18 @@ module.exports = {
   env: {
     node: true,
   },
+  plugins: ['@renovate'],
   extends: [
-    'plugin:promise/recommended',
+    'eslint:recommended',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:import/typescript',
+    'plugin:jest/recommended',
+    'plugin:jest/style',
+    // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin/src/configs
     'plugin:@typescript-eslint/recommended',
-    'airbnb-typescript/base',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'plugin:promise/recommended',
     'prettier',
   ],
   parserOptions: {
@@ -44,6 +52,10 @@ module.exports = {
   },
   overrides: [
     {
+      // files to check, so no `--ext` is required
+      files: ['**/*.{js,mjs,cjs,ts}'],
+    },
+    {
       files: ['**/*.test.ts'],
       env: {
         jest: true,
@@ -58,6 +70,8 @@ module.exports = {
         '@typescript-eslint/no-object-literal-type-assertion': 0,
         '@typescript-eslint/explicit-function-return-type': 0,
         '@typescript-eslint/unbound-method': 0,
+
+        'jest/expect-expect': 0, // TODO: fix me
       },
     },
     {

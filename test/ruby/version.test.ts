@@ -61,7 +61,7 @@ test('test_bump_one_level', () => {
 test('test_class_create', () => {
   const real = new Version(1.0);
   expect(Version.create(real)).toBe(real);
-  expect(Version.create(null)).toBe(null);
+  expect(Version.create(null)).toBeNull();
 });
 
 //   def test_class_correct
@@ -187,7 +187,7 @@ test('test_initialize_invalid', () => {
 //   end
 test('test_empty_version', () => {
   ['', '   ', ' '].forEach((empty) => {
-    expect(v(empty).version()).toEqual('0');
+    expect(v(empty).version()).toBe('0');
   });
 });
 
@@ -272,7 +272,7 @@ test('test_spaceship', () => {
   assertVersionOrder('5.a', '5.0.0.rc2', -1);
   assertVersionOrder('5.x', '5.0.0.rc2', 1);
 
-  expect(v('1.0').compare(v('whatever'))).toBe(null);
+  expect(v('1.0').compare(v('whatever'))).toBeNull();
 });
 
 //   def test_approximate_recommendation
@@ -311,7 +311,7 @@ test('test_approximate_recommendation', () => {
 //     assert_equal "5.2.4", v("5.2.4").to_s
 //   end
 test('test_to_s', () => {
-  expect(v('5.2.4').toString()).toEqual('5.2.4');
+  expect(v('5.2.4').toString()).toBe('5.2.4');
 });
 
 //   def test_semver
@@ -404,7 +404,7 @@ function assertReleaseEqual(release: string, version: string) {
 //     assert_equal v(expected).hash, v(actual).hash, "since #{actual} == #{expected}, they must have the same hash"
 //   end
 function assertVersionEqual(expected: string, actual: string) {
-  expect(v(expected).compare(v(actual))).toEqual(0);
+  expect(v(expected).compare(v(actual))).toBe(0);
 }
 function assertVersionOrder(expected: string, actual: string, value: number) {
   expect(v(expected).compare(v(actual))).toEqual(value);
@@ -459,7 +459,7 @@ function refuteVersionEql(firstStr: string, secondStr: string) {
 //     refute_equal v(unexpected), v(actual)
 //   end
 function refuteVersionEqual(unexpected: string, actual: string) {
-  expect(v(unexpected).compare(v(actual))).not.toEqual(0);
+  expect(v(unexpected).compare(v(actual))).not.toBe(0);
 }
 
 // end

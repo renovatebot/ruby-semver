@@ -3,8 +3,8 @@
 import { Version } from '../../lib/ruby/version';
 import { Requirement } from '../../lib/ruby/requirement';
 
-const v = (x: any) => Version.create(x);
-const req = (...x: any) => Requirement.create(...x);
+const v = (x: unknown) => Version.create(x);
+const req = (...x: unknown[]) => Requirement.create(...x);
 
 // # frozen_string_literal: true
 // require 'rubygems/test_case'
@@ -318,7 +318,7 @@ test('test_satisfied_by_eh_lt', () => {
 //       r.satisfied_by? nil
 //     end
 //   end
-test('test_satisfied_by_eh_lt', () => {
+test('test_satisfied_by_eh_lte', () => {
   const r = req('<= 1.2');
   assertSatisfiedBy('1.1', r);
   assertSatisfiedBy('1.2', r);
