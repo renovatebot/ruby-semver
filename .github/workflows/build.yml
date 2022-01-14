@@ -13,9 +13,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  YARN_MODULES_CACHE_KEY: v1
-  YARN_PACKAGE_CACHE_KEY: v1
-  YARN_CACHE_FOLDER: .cache/yarn
   GIT_EMAIL: bot+ruby-semver@renovateapp.com
   NODE_VERSION: 14 # needs to be in sync with other v14 below
 
@@ -30,10 +27,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node-version: [12,14]
+        node-version: [14,16]
         exclude:
           - os: windows-latest
-            node-version: 12
+            node-version: 16
 
     env:
       coverage: ${{ matrix.os == 'ubuntu-latest' && matrix.node-version == 14 }}
