@@ -3,17 +3,16 @@
   "extends": ["github>renovatebot/.github"],
   "packageRules": [
     {
-      "matchDepTypes": ["dependencies"],
-      "semanticCommitType": "build"
-    },
-    {
-      "matchDepTypes": ["dependencies"],
-      "extends": [":automergePatch"]
-    },
-    {
       "matchPackageNames": ["prettier"],
       "matchPackagePatterns": ["^@prettier\\/", "^prettier-plugin-"],
       "groupName": "prettier packages"
+    },
+    {
+      "matchPackageNames": [
+        "semantic-release",
+        "conventional-changelog-conventionalcommits"
+      ],
+      "semanticCommitType": "build"
     }
   ]
 }
