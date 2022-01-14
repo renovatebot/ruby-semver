@@ -4,9 +4,10 @@
     "declarationDir": "./dist",
     "module": "commonjs",
     "noImplicitAny": true,
-    "lib": ["es2018"],
+    "lib": ["ES2018"],
     "outDir": "./dist",
-    "target": "es2018",
+    /* https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping */
+    "target": "ES2018",
     "moduleResolution": "node",
     "importHelpers": true
   },
