@@ -22,7 +22,7 @@ export type ParsedRequirement = [string, Version];
 /**
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat#Alternative
  */
-function flatten(input: any[]): any[] {
+function flatten<T = any>(input: T[]): T[] {
   const stack = [...input];
   const res = [];
   while (stack.length) {
@@ -130,11 +130,13 @@ export class Requirement {
   //       end
   //     end
   //   end
-  static create(...inputs: any[]): Requirement {
-    if (inputs.length > 1) return new Requirement(...inputs);
+  static create(...inputs: unknown[]): Requirement {
+    if (inputs.length > 1)
+      return new Requirement(...(inputs as RawRequirement[]));
     const input = inputs.shift();
     if (input instanceof Requirement) return input;
-    if (input instanceof Array) return new Requirement(...input);
+    if (input instanceof Array)
+      return new Requirement(...(input as RawRequirement[]));
     if (input instanceof Version) return new Requirement(input);
     try {
       return new Requirement(copystr(input.toString()));
@@ -190,6 +192,7 @@ export class Requirement {
   //   end
   static parse(obj: unknown): ParsedRequirement {
     const err = (): void => {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new Error(`Illformed requirement [${obj}]`);
     };
 
@@ -494,4 +497,4 @@ export class Requirement {
   // end
 }
 
-export const parse = Requirement.parse;
+export const parse = (obj: unknown) => Requirement.parse(obj);

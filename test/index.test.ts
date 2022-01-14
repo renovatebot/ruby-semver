@@ -109,9 +109,9 @@ test('lte', () => {
 
 test('valid', () => {
   expect(valid('1.0.0')).toBe('1.0.0');
-  expect(valid('1.0.0.')).toBe(null);
-  expect(valid('')).toBe(null);
-  expect(valid(null)).toBe(null);
+  expect(valid('1.0.0.')).toBeNull();
+  expect(valid('')).toBeNull();
+  expect(valid(null)).toBeNull();
 });
 
 test('satisfies', () => {
@@ -130,97 +130,97 @@ test('satisfies', () => {
 });
 
 test('maxSatisfying', () => {
-  expect(max(['2.1.5', '2.1.6'], '~> 2.1')).toEqual('2.1.6');
+  expect(max(['2.1.5', '2.1.6'], '~> 2.1')).toBe('2.1.6');
 
-  expect(max(['2.1.6', '2.1.5'], '~> 2.1.6')).toEqual('2.1.6');
+  expect(max(['2.1.6', '2.1.5'], '~> 2.1.6')).toBe('2.1.6');
 
-  expect(max(['4.7.3', '4.7.4', '4.7.5', '4.7.9'], '~> 4.7, >= 4.7.4')).toEqual(
+  expect(max(['4.7.3', '4.7.4', '4.7.5', '4.7.9'], '~> 4.7, >= 4.7.4')).toBe(
     '4.7.9'
   );
 
-  expect(max(['2.5.3', '2.5.4', '2.5.5', '2.5.6'], '~>2.5.3')).toEqual('2.5.6');
+  expect(max(['2.5.3', '2.5.4', '2.5.5', '2.5.6'], '~>2.5.3')).toBe('2.5.6');
 
   expect(
     max(
       ['2.1.0', '3.0.0.beta', '2.3', '3.0.0-rc.1', '3.0.0', '3.1.1'],
       '~> 3.0'
     )
-  ).toEqual('3.1.1');
+  ).toBe('3.1.1');
 
   expect(max(['1.2.3', '1.2.4'], '>= 3.5.0')).toBeNull();
 });
 
 test('minSatisfying', () => {
-  expect(min(['2.1.5', '2.1.6'], '~> 2.1')).toEqual('2.1.5');
+  expect(min(['2.1.5', '2.1.6'], '~> 2.1')).toBe('2.1.5');
 
-  expect(min(['2.1.6', '2.1.5'], '~> 2.1.6')).toEqual('2.1.6');
+  expect(min(['2.1.6', '2.1.5'], '~> 2.1.6')).toBe('2.1.6');
 
-  expect(min(['4.7.3', '4.7.4', '4.7.5', '4.7.9'], '~> 4.7, >= 4.7.4')).toEqual(
+  expect(min(['4.7.3', '4.7.4', '4.7.5', '4.7.9'], '~> 4.7, >= 4.7.4')).toBe(
     '4.7.4'
   );
 
-  expect(min(['2.5.3', '2.5.4', '2.5.5', '2.5.6'], '~>2.5.3')).toEqual('2.5.3');
+  expect(min(['2.5.3', '2.5.4', '2.5.5', '2.5.6'], '~>2.5.3')).toBe('2.5.3');
 
   expect(
     min(
       ['2.1.0', '3.0.0.beta', '2.3', '3.0.0-rc.1', '3.0.0', '3.1.1'],
       '~> 3.0'
     )
-  ).toEqual('3.0.0');
+  ).toBe('3.0.0');
 
   expect(min(['1.2.3', '1.2.4'], '>= 3.5.0')).toBeNull();
 });
 
 test('major', () => {
-  expect(major(null)).toBe(null);
-  expect(major('')).toBe(null);
-  expect(major('1.')).toBe(null);
+  expect(major(null)).toBeNull();
+  expect(major('')).toBeNull();
+  expect(major('1.')).toBeNull();
 
-  expect(major('1')).toEqual(1);
-  expect(major('1.2')).toEqual(1);
-  expect(major('1.2.0')).toEqual(1);
-  expect(major('1.2.0.alpha.4')).toEqual(1);
+  expect(major('1')).toBe(1);
+  expect(major('1.2')).toBe(1);
+  expect(major('1.2.0')).toBe(1);
+  expect(major('1.2.0.alpha.4')).toBe(1);
 });
 
 test('minor', () => {
-  expect(minor(null)).toBe(null);
-  expect(minor('')).toBe(null);
-  expect(minor('1.')).toBe(null);
+  expect(minor(null)).toBeNull();
+  expect(minor('')).toBeNull();
+  expect(minor('1.')).toBeNull();
 
-  expect(minor('1')).toEqual(null);
-  expect(minor('1.0')).toEqual(0);
+  expect(minor('1')).toBeNull();
+  expect(minor('1.0')).toBe(0);
 
-  expect(minor('1.2')).toEqual(2);
-  expect(minor('1.2.0')).toEqual(2);
-  expect(minor('1.2.0.alpha.4')).toEqual(2);
+  expect(minor('1.2')).toBe(2);
+  expect(minor('1.2.0')).toBe(2);
+  expect(minor('1.2.0.alpha.4')).toBe(2);
   expect(minor('1')).toBeNull();
 });
 
 test('patch', () => {
-  expect(patch(null)).toBe(null);
-  expect(patch('')).toBe(null);
-  expect(patch('1.')).toBe(null);
+  expect(patch(null)).toBeNull();
+  expect(patch('')).toBeNull();
+  expect(patch('1.')).toBeNull();
 
-  expect(patch('1')).toEqual(null);
-  expect(patch('1.0')).toEqual(null);
-  expect(patch('1.0.0')).toEqual(0);
+  expect(patch('1')).toBeNull();
+  expect(patch('1.0')).toBeNull();
+  expect(patch('1.0.0')).toBe(0);
 
-  expect(patch('1.2.2')).toEqual(2);
-  expect(patch('1.2.1.alpha.4')).toEqual(1);
+  expect(patch('1.2.2')).toBe(2);
+  expect(patch('1.2.1.alpha.4')).toBe(1);
   expect(patch('1')).toBeNull();
   expect(patch('1.2')).toBeNull();
 });
 
 test('prerelease', () => {
-  expect(prerelease(null)).toBe(null);
-  expect(prerelease('')).toBe(null);
-  expect(prerelease('1.')).toBe(null);
+  expect(prerelease(null)).toBeNull();
+  expect(prerelease('')).toBeNull();
+  expect(prerelease('1.')).toBeNull();
 
   expect(prerelease('1.2.0-alpha')).toEqual(['pre', 'alpha']);
   expect(prerelease('1.2.0.alpha')).toEqual(['alpha']);
   expect(prerelease('1.2.0.alpha1')).toEqual(['alpha', '1']);
   expect(prerelease('1.2.0-alpha.1')).toEqual(['pre', 'alpha', '1']);
-  expect(prerelease('1')).toBe(null);
-  expect(prerelease('1.2')).toBe(null);
-  expect(prerelease('1.2.3')).toBe(null);
+  expect(prerelease('1')).toBeNull();
+  expect(prerelease('1.2')).toBeNull();
+  expect(prerelease('1.2.3')).toBeNull();
 });

@@ -257,6 +257,7 @@ export class Version {
   //   end
   constructor(version: unknown) {
     if (!Version.isCorrect(version)) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new Error(`Malformed version number string ${version}`);
     }
 
@@ -461,7 +462,7 @@ export class Version {
   compare(other: Version): number {
     if (other === null) return null;
 
-    const segEq = (x: any, y: any): boolean => {
+    const segEq = (x: SegmentElement[], y: SegmentElement[]): boolean => {
       if (x.length !== y.length) return false;
       for (let idx = 0; idx < x.length; idx += 1) {
         if (x[idx] !== y[idx]) return false;
@@ -519,7 +520,7 @@ export class Version {
       const sliceIdx = segmentsReverse.findIndex((s) => s !== 0);
       return segmentsReverse.slice(sliceIdx).reverse();
     });
-    return Array.prototype.concat.apply([], canonicals);
+    return Array.prototype.concat.apply([], canonicals) as SegmentElement[];
   }
 
   //
@@ -566,4 +567,4 @@ export class Version {
   }
 } // end
 
-export const create = Version.create;
+export const create = (val: unknown) => Version.create(val);
