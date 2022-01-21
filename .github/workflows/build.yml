@@ -158,6 +158,9 @@ jobs:
       - name: Installing dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Build
+        run: yarn build
+
       - name: semantic-release
         run: |
           yarn semantic-release --dry-run ${{github.ref != 'refs/heads/main'}} --ci ${{github.ref == 'refs/heads/main'}}
