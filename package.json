@@ -31,8 +31,8 @@
   "devDependencies": {
     "@renovate/eslint-plugin": "https://github.com/renovatebot/eslint-plugin#v0.0.4",
     "@types/jest": "27.5.2",
-    "@typescript-eslint/eslint-plugin": "5.43.0",
-    "@typescript-eslint/parser": "5.43.0",
+    "@typescript-eslint/eslint-plugin": "5.44.0",
+    "@typescript-eslint/parser": "5.44.0",
     "babel-jest": "27.5.1",
     "babel-plugin-dynamic-import-node": "2.3.3",
     "conventional-changelog-conventionalcommits": "4.6.3",
