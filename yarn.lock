@@ -872,10 +872,10 @@
   dependencies:
     "@octokit/openapi-types" "^12.11.0"
 
-"@renovate/eslint-plugin@https://github.com/renovatebot/eslint-plugin#v0.0.4":
-  version "0.0.4"
-  uid "0c444386e79d6145901212507521b8a0a48af000"
-  resolved "https://github.com/renovatebot/eslint-plugin#0c444386e79d6145901212507521b8a0a48af000"
+"@renovate/eslint-plugin@https://github.com/renovatebot/eslint-plugin#v0.0.5":
+  version "0.0.5"
+  uid "1923e2e2776549cb25a2c6ea09915ee31bff6d05"
+  resolved "https://github.com/renovatebot/eslint-plugin#1923e2e2776549cb25a2c6ea09915ee31bff6d05"
 
 "@semantic-release/commit-analyzer@^9.0.2":
   version "9.0.2"
