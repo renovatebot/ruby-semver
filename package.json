@@ -22,6 +22,7 @@
     "lint-fix": "run-s eslint-fix markdown-lint-fix prettier-fix",
     "markdown-lint": "markdownlint-cli2",
     "markdown-lint-fix": "markdownlint-cli2-fix",
+    "prepack": "runs-s build",
     "prepare": "run-s prepare:*",
     "prepare:husky": "husky install",
     "prettier": "prettier --check --ignore-unknown \"**/*.*\"",
