@@ -19,23 +19,6 @@ import { Version } from './version';
 export type RawRequirement = Version | string | null;
 export type ParsedRequirement = [string, Version];
 
-/**
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat#Alternative
- */
-function flatten<T = any>(input: T[]): T[] {
-  const stack = [...input];
-  const res = [];
-  while (stack.length) {
-    const next = stack.pop();
-    if (Array.isArray(next)) {
-      stack.push(...next);
-    } else {
-      res.push(next);
-    }
-  }
-  return res.reverse();
-}
-
 // TODO: consider richer `eql` semantics
 const defaultEql = (x: any, y: any): boolean => x === y;
 function uniq(array: any[], eql = defaultEql): any[] {
@@ -236,7 +219,7 @@ export class Requirement {
   //     end
   //   end
   constructor(...requirements: RawRequirement[]) {
-    const flattened = flatten(requirements);
+    const flattened = requirements.flat();
     const compacted = flattened.filter((x) => x !== null);
     const unique = uniq(compacted);
     if (unique.length === 0) {
@@ -258,7 +241,7 @@ export class Requirement {
   //     @requirements.concat new
   //   end
   concat(newReqs: RawRequirement[]): void {
-    const flattened = flatten(newReqs);
+    const flattened = newReqs.flat();
     const compacted = flattened.filter((x) => x !== null);
     const unique = uniq(compacted);
     const parsed = unique.map((x) => Requirement.parse(x));

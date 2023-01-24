@@ -13,7 +13,7 @@
     "url": "https://github.com/renovatebot/ruby-semver"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.lib.json",
     "eslint": "eslint .",
     "eslint-fix": "eslint .",
     "jest": "jest --coverage",
