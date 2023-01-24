@@ -1,4 +1,3 @@
-
 const ci = !!process.env.CI;
 
 /** @type {import('jest').Config} */
@@ -9,7 +8,5 @@ module.exports = {
   },
   testEnvironment: 'node',
   coverageProvider: 'v8',
-  coverageReporters: ci
-  ? ['html', 'json', 'text']
-  : ['html', 'text'],
+  coverageReporters: ci ? ['html', 'json', 'text'] : ['html', 'text'],
 };
