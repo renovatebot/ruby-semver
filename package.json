@@ -1,6 +1,6 @@
 {
   "name": "@renovatebot/ruby-semver",
-  "version": "1.0.0",
+  "version": "0.0.0-semantic-release",
   "license": "MIT",
   "description": "Ruby SemVer in TypeScript.",
   "main": "./dist/index.js",
@@ -10,13 +10,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/renovatebot/ruby-semver"
+    "url": "https://github.com/renovatebot/ruby-semver.git"
   },
   "scripts": {
     "build": "tsc -p tsconfig.lib.json",
     "eslint": "eslint .",
     "eslint-fix": "eslint .",
-    "jest": "jest --coverage",
+    "jest": "jest",
     "jest-debug": "node --expose-gc --inspect-brk node_modules/jest/bin/jest --runInBand",
     "lint": "run-s eslint markdown-lint prettier",
     "lint-fix": "run-s eslint-fix markdown-lint-fix prettier-fix",
