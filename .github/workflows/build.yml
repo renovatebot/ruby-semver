@@ -113,6 +113,7 @@ jobs:
       - name: Lint
         run: |
           yarn eslint -f gha
+          yarn markdown-lint
           yarn prettier
 
       - name: Type check
