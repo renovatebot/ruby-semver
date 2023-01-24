@@ -459,7 +459,7 @@ export class Version {
   //
   //     return 0
   //   end
-  compare(other: Version): number {
+  compare(other: Version | null): number {
     if (other === null) return null;
 
     const segEq = (x: SegmentElement[], y: SegmentElement[]): boolean => {
@@ -503,8 +503,7 @@ export class Version {
       rhs = rhs.toString();
       return lhs.localeCompare(rhs, undefined, { numeric: true });
     }
-
-    /* istanbul ignore next */
+    /* c8 ignore next 2 */
     return 0;
   }
 

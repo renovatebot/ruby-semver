@@ -58,7 +58,7 @@ export function lte(v1: string, v2: string): boolean {
 /**
  * Return the parsed version, or null if it's not valid.
  */
-export function valid(version: string): string | null {
+export function valid(version: string | null | undefined): string | null {
   if (!version) return null;
   return Version.isCorrect(version) ? version : null;
 }
@@ -107,7 +107,7 @@ export function minSatisfying(
 /**
  * Return the major version number.
  */
-export function major(v: string): number {
+export function major(v: string | null | undefined): number {
   if (!v) return null;
   const version = Version.create(v);
   if (!version) return null;
@@ -119,7 +119,7 @@ export function major(v: string): number {
 /**
  * Return the minor version number.
  */
-export function minor(v: string): number {
+export function minor(v: string | null | undefined): number {
   if (!v) return null;
   const version = Version.create(v);
   if (!version) return null;
@@ -131,7 +131,7 @@ export function minor(v: string): number {
 /**
  * Return the patch version number.
  */
-export function patch(v: string): number {
+export function patch(v: string | null | undefined): number {
   if (!v) return null;
   const version = Version.create(v);
   if (!version) return null;
@@ -143,7 +143,7 @@ export function patch(v: string): number {
 /**
  * Returns an array of prerelease components, or null if none exist.
  */
-export function prerelease(v: string): string[] | null {
+export function prerelease(v: string | null | undefined): string[] | null {
   if (!v) return null;
   const version = Version.create(v);
   if (!version) return null;

@@ -1,7 +1,7 @@
 // https://github.com/ruby/ruby/blob/d4a86e407ec2057c2c7ad757aa76dad757f34c3a/test/rubygems/test_gem_requirement.rb
 
 import { Version } from '../../lib/ruby/version';
-import { Requirement } from '../../lib/ruby/requirement';
+import { parse, Requirement } from '../../lib/ruby/requirement';
 
 const v = (x: unknown) => Version.create(x);
 const req = (...x: unknown[]) => Requirement.create(...x);
@@ -134,6 +134,7 @@ test('test_parse', () => {
   expect(Requirement.parse('=\n1')).toEqual(['=', v(1)]);
   expect(Requirement.parse('1.0')).toEqual(['=', v('1.0')]);
   expect(Requirement.parse('2')).toEqual(['=', v('2')]);
+  expect(parse('2')).toEqual(['=', v('2')]);
 });
 
 //   def test_parse_bad
@@ -672,8 +673,8 @@ function assertRequirementEqual(expected: any, actual: any) {
 //     assert req(requirement).satisfied_by?(v(version)),
 //       "#{requirement} is satisfied by #{version}"
 //   end
-function assertSatisfiedBy(version: any, requirement: any) {
-  expect(req(requirement).isSatisfiedBy(v(version))).toBe(true);
+function assertSatisfiedBy(version: unknown, requirement: unknown) {
+  expect(req(requirement).isSatisfiedBy(v(version)!)).toBe(true);
 }
 
 //   # Refute the assumption that two requirements are equal.
@@ -681,7 +682,7 @@ function assertSatisfiedBy(version: any, requirement: any) {
 //   def refute_requirement_equal(unexpected, actual)
 //     refute_equal req(unexpected), req(actual)
 //   end
-function refuteRequirementEqual(expected: any, actual: any) {
+function refuteRequirementEqual(expected: unknown, actual: unknown) {
   expect(req(actual).eql(req(expected))).toBe(false);
   expect(req(expected).eql(req(actual))).toBe(false);
 }
@@ -692,8 +693,8 @@ function refuteRequirementEqual(expected: any, actual: any) {
 //     refute req(requirement).satisfied_by?(v(version)),
 //       "#{requirement} is not satisfied by #{version}"
 //   end
-function refuteSatisfiedBy(version: any, requirement: any) {
-  expect(req(requirement).isSatisfiedBy(v(version))).toBe(false);
+function refuteSatisfiedBy(version: unknown, requirement: unknown) {
+  expect(req(requirement).isSatisfiedBy(v(version)!)).toBe(false);
 }
 
 // end

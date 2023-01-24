@@ -1,6 +1,6 @@
 // https://github.com/ruby/ruby/blob/d4a86e407ec2057c2c7ad757aa76dad757f34c3a/test/rubygems/test_gem_version.rb
 
-import { Version } from '../../lib/ruby/version';
+import { create, Version } from '../../lib/ruby/version';
 
 const v = (x: string) => Version.create(x);
 
@@ -62,6 +62,7 @@ test('test_class_create', () => {
   const real = new Version(1.0);
   expect(Version.create(real)).toBe(real);
   expect(Version.create(null)).toBeNull();
+  expect(create(null)).toBeNull();
 });
 
 //   def test_class_correct
@@ -187,7 +188,7 @@ test('test_initialize_invalid', () => {
 //   end
 test('test_empty_version', () => {
   ['', '   ', ' '].forEach((empty) => {
-    expect(v(empty).version()).toBe('0');
+    expect(v(empty)!.version()).toBe('0');
   });
 });
 
@@ -207,19 +208,19 @@ test('test_empty_version', () => {
 //     refute_prerelease "22.1.50.0"
 //   end
 test('test_prerelease', () => {
-  expect(v('1.2.0.a').isPrerelease()).toBe(true);
-  expect(v('2.9.b').isPrerelease()).toBe(true);
-  expect(v('22.1.50.0.d').isPrerelease()).toBe(true);
-  expect(v('1.2.d.42').isPrerelease()).toBe(true);
+  expect(v('1.2.0.a')!.isPrerelease()).toBe(true);
+  expect(v('2.9.b')!.isPrerelease()).toBe(true);
+  expect(v('22.1.50.0.d')!.isPrerelease()).toBe(true);
+  expect(v('1.2.d.42')!.isPrerelease()).toBe(true);
 
-  expect(v('1.A').isPrerelease()).toBe(true);
+  expect(v('1.A')!.isPrerelease()).toBe(true);
 
-  expect(v('1-1').isPrerelease()).toBe(true);
-  expect(v('1-a').isPrerelease()).toBe(true);
+  expect(v('1-1')!.isPrerelease()).toBe(true);
+  expect(v('1-a')!.isPrerelease()).toBe(true);
 
-  expect(v('1.2.0').isPrerelease()).toBe(false);
-  expect(v('2.9').isPrerelease()).toBe(false);
-  expect(v('22.1.50.0').isPrerelease()).toBe(false);
+  expect(v('1.2.0')!.isPrerelease()).toBe(false);
+  expect(v('2.9')!.isPrerelease()).toBe(false);
+  expect(v('22.1.50.0')!.isPrerelease()).toBe(false);
 });
 
 //   def test_release
@@ -272,7 +273,7 @@ test('test_spaceship', () => {
   assertVersionOrder('5.a', '5.0.0.rc2', -1);
   assertVersionOrder('5.x', '5.0.0.rc2', 1);
 
-  expect(v('1.0').compare(v('whatever'))).toBeNull();
+  expect(v('1.0')!.compare(v('whatever'))).toBeNull();
 });
 
 //   def test_approximate_recommendation
@@ -311,7 +312,7 @@ test('test_approximate_recommendation', () => {
 //     assert_equal "5.2.4", v("5.2.4").to_s
 //   end
 test('test_to_s', () => {
-  expect(v('5.2.4').toString()).toBe('5.2.4');
+  expect(v('5.2.4')!.toString()).toBe('5.2.4');
 });
 
 //   def test_semver
@@ -345,11 +346,11 @@ test('test_semver', () => {
 //     assert_equal [1, 2, 3, "pre", 1], v("1.2.3-1").canonical_segments
 //   end
 test('test_canonical_segments', () => {
-  expect(v('1.0.0').canonicalSegments()).toEqual([1]);
-  expect(v('1.0.0.a.1.0').canonicalSegments()).toEqual([1, 'a', 1]);
-  expect(v('1.2.3-1').canonicalSegments()).toEqual([1, 2, 3, 'pre', 1]);
+  expect(v('1.0.0')!.canonicalSegments()).toEqual([1]);
+  expect(v('1.0.0.a.1.0')!.canonicalSegments()).toEqual([1, 'a', 1]);
+  expect(v('1.2.3-1')!.canonicalSegments()).toEqual([1, 2, 3, 'pre', 1]);
 
-  expect(v('1.2.3-1').splitSegments()).toEqual([
+  expect(v('1.2.3-1')!.splitSegments()).toEqual([
     [1, 2, 3],
     ['pre', 1],
   ]);
@@ -367,7 +368,7 @@ test('test_canonical_segments', () => {
 //     assert_equal expected, v(version).approximate_recommendation
 //   end
 function assertApproximateEqual(expected: string, version: string) {
-  expect(v(version).approximateRecommendation().toString()).toEqual(expected);
+  expect(v(version)!.approximateRecommendation().toString()).toEqual(expected);
 }
 
 //   # Assert that the "approximate" recommendation for +version+ satifies +version+.
@@ -385,7 +386,7 @@ function assertApproximateEqual(expected: string, version: string) {
 //     assert_version_equal expected, v(unbumped).bump
 //   end
 function assertBumpedVersionEqual(expected: string, unbumped: string) {
-  assertVersionEqual(expected, v(unbumped).bump().toString());
+  assertVersionEqual(expected, v(unbumped)!.bump().toString());
 }
 
 //   # Assert that +release+ is the correct non-prerelease +version+.
@@ -394,7 +395,7 @@ function assertBumpedVersionEqual(expected: string, unbumped: string) {
 //     assert_version_equal release, v(version).release
 //   end
 function assertReleaseEqual(release: string, version: string) {
-  assertVersionEqual(release, v(version).release().toString());
+  assertVersionEqual(release, v(version)!.release().toString());
 }
 
 //   # Assert that two versions are equal. Handles strings or
@@ -404,11 +405,11 @@ function assertReleaseEqual(release: string, version: string) {
 //     assert_equal v(expected).hash, v(actual).hash, "since #{actual} == #{expected}, they must have the same hash"
 //   end
 function assertVersionEqual(expected: string, actual: string) {
-  expect(v(expected).compare(v(actual))).toBe(0);
+  expect(v(expected)!.compare(v(actual))).toBe(0);
 }
 function assertVersionOrder(expected: string, actual: string, value: number) {
-  expect(v(expected).compare(v(actual))).toEqual(value);
-  expect(v(actual).compare(v(expected))).toEqual(value === 0 ? 0 : -value);
+  expect(v(expected)!.compare(v(actual))).toEqual(value);
+  expect(v(actual)!.compare(v(expected))).toEqual(value === 0 ? 0 : -value);
 }
 
 //   # Assert that two versions are eql?. Checks both directions.
@@ -418,7 +419,7 @@ function assertVersionOrder(expected: string, actual: string, value: number) {
 //     assert second.eql?(first), "#{second} is eql? #{first}"
 //   end
 function assertVersionEql(firstStr: string, secondStr: string) {
-  const [first, second] = [v(firstStr), v(secondStr)];
+  const [first, second] = [v(firstStr)!, v(secondStr)!];
   expect(first.strictEql(second)).toBe(true);
   expect(second.strictEql(first)).toBe(true);
 }
@@ -448,7 +449,7 @@ function assertLessThan(left: string, right: string) {
 //     refute second.eql?(first), "#{second} is NOT eql? #{first}"
 //   end
 function refuteVersionEql(firstStr: string, secondStr: string) {
-  const [first, second] = [v(firstStr), v(secondStr)];
+  const [first, second] = [v(firstStr)!, v(secondStr)!];
   expect(first.strictEql(second)).toBe(false);
   expect(second.strictEql(first)).toBe(false);
 }
@@ -459,7 +460,7 @@ function refuteVersionEql(firstStr: string, secondStr: string) {
 //     refute_equal v(unexpected), v(actual)
 //   end
 function refuteVersionEqual(unexpected: string, actual: string) {
-  expect(v(unexpected).compare(v(actual))).not.toBe(0);
+  expect(v(unexpected)!.compare(v(actual))).not.toBe(0);
 }
 
 // end

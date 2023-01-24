@@ -401,7 +401,7 @@ export class Requirement {
           return v.compare(r) !== 1;
         case '~>':
           return v.compare(r) !== -1 && v.release().compare(r.bump()) === -1;
-        /* istanbul ignore next */
+        /* c8 ignore next 2 */
         default:
           return false;
       }
