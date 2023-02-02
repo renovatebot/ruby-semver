@@ -35,7 +35,7 @@
     "yarn": "^1.22.0"
   },
   "dependencies": {
-    "tslib": "^2.4.1"
+    "tslib": "^2.5.0"
   },
   "devDependencies": {
     "@renovate/eslint-plugin": "https://github.com/renovatebot/eslint-plugin#v0.0.5",
