@@ -34,9 +34,6 @@
     "node": "^14.15.0 || ^16.13.0 || >= 18.12.0",
     "yarn": "^1.22.0"
   },
-  "dependencies": {
-    "tslib": "^2.5.0"
-  },
   "devDependencies": {
     "@renovate/eslint-plugin": "https://github.com/renovatebot/eslint-plugin#v0.0.5",
     "@types/jest": "29.5.1",
