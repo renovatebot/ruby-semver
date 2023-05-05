@@ -8,8 +8,7 @@
     "outDir": "./dist",
     /* https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping */
     "target": "ES2020",
-    "moduleResolution": "node",
-    "importHelpers": true
+    "moduleResolution": "node"
   },
   "exclude": ["node_modules", "dist"]
 }
