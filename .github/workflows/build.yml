@@ -29,13 +29,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node-version: [14, 16, 18]
-        # exclude:
-        #   - os: windows-latest
-        #     node-version: 12
+        node-version: [18, 20]
 
     env:
-      coverage: ${{ matrix.os == 'ubuntu-latest' && matrix.node-version == 14 }}
+      coverage: ${{ matrix.os == 'ubuntu-latest' && matrix.node-version == 18 }}
       NODE_VERSION: ${{ matrix.node-version }}
 
     permissions:
