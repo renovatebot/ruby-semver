@@ -4,4 +4,4 @@
 .DS_Store
 .cache
 /*.log
-package.json
+/pnpm-lock.yaml
