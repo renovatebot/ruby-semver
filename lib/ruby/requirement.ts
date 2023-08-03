@@ -29,7 +29,7 @@ function uniq(array: any[], eql = defaultEql): any[] {
 function reqsEql(
   xReqs: ParsedRequirement[],
   yReqs: ParsedRequirement[],
-  eql: (x: ParsedRequirement, y: ParsedRequirement) => boolean
+  eql: (x: ParsedRequirement, y: ParsedRequirement) => boolean,
 ): boolean {
   if (xReqs.length !== yReqs.length) return false;
   for (let idx = 0; idx < xReqs.length; idx += 1) {
@@ -431,7 +431,7 @@ export class Requirement {
       !reqsEql(
         this._requirements,
         other._requirements,
-        ([xOp, xVer], [yOp, yVer]) => xOp === yOp && xVer.compare(yVer) === 0
+        ([xOp, xVer], [yOp, yVer]) => xOp === yOp && xVer.compare(yVer) === 0,
       )
     ) {
       return false;
@@ -443,7 +443,7 @@ export class Requirement {
     return reqsEql(
       tildeReqs,
       other._tildeRequirements(),
-      ([, xVer], [, yVer]) => xVer.strictEql(yVer)
+      ([, xVer], [, yVer]) => xVer.strictEql(yVer),
     );
   }
 

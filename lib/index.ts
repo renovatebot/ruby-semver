@@ -81,7 +81,7 @@ export function satisfies(version: string, range: string): boolean {
  */
 export function maxSatisfying(
   versions: string[],
-  range: string
+  range: string,
 ): string | null {
   return versions.reduce((x, y) => {
     const isValid = satisfies(y, range);
@@ -95,7 +95,7 @@ export function maxSatisfying(
  */
 export function minSatisfying(
   versions: string[],
-  range: string
+  range: string,
 ): string | null {
   return versions.reduce((x, y) => {
     const isValid = satisfies(y, range);
