@@ -553,14 +553,14 @@ export class Version {
   //   end
   splitSegments(): [number[], SegmentElement[]] {
     let stringStart = this.getSegments().findIndex(
-      (x) => typeof x === 'string'
+      (x) => typeof x === 'string',
     );
     stringStart = stringStart === -1 ? null : stringStart;
 
     const stringSegments = this.getSegments();
     const numericSegments = stringSegments.splice(
       0,
-      stringStart || stringSegments.length
+      stringStart || stringSegments.length,
     );
 
     return [numericSegments as number[], stringSegments];

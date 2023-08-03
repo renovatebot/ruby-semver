@@ -158,7 +158,7 @@ test('test_parse_bad', () => {
   const invalidRequirements = [null, '', '! 1', '= junk', '1..2'];
   invalidRequirements.forEach((bad) => {
     expect(() => Requirement.parse(bad)).toThrow(
-      `Illformed requirement [${bad}]`
+      `Illformed requirement [${bad}]`,
     );
   });
 });
