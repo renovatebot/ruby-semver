@@ -15,7 +15,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.lib.json",
     "eslint": "eslint .",
-    "eslint-fix": "eslint .",
+    "eslint-fix": "eslint . --fix",
     "jest": "jest",
     "jest-debug": "node --expose-gc --inspect-brk node_modules/jest/bin/jest --runInBand",
     "lint": "run-s eslint markdown-lint prettier",

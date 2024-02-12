@@ -674,7 +674,7 @@ function assertRequirementEqual(expected: any, actual: any) {
 //       "#{requirement} is satisfied by #{version}"
 //   end
 function assertSatisfiedBy(version: unknown, requirement: unknown) {
-  expect(req(requirement).isSatisfiedBy(v(version)!)).toBe(true);
+  expect(req(requirement).isSatisfiedBy(v(version))).toBe(true);
 }
 
 //   # Refute the assumption that two requirements are equal.
@@ -694,7 +694,7 @@ function refuteRequirementEqual(expected: unknown, actual: unknown) {
 //       "#{requirement} is not satisfied by #{version}"
 //   end
 function refuteSatisfiedBy(version: unknown, requirement: unknown) {
-  expect(req(requirement).isSatisfiedBy(v(version)!)).toBe(false);
+  expect(req(requirement).isSatisfiedBy(v(version))).toBe(false);
 }
 
 // end
