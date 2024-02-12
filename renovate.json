@@ -3,18 +3,6 @@
   "extends": ["github>renovatebot/.github"],
   "packageRules": [
     {
-      "matchPackageNames": ["prettier"],
-      "matchPackagePatterns": ["^@prettier\\/", "^prettier-plugin-"],
-      "groupName": "prettier packages"
-    },
-    {
-      "matchPackageNames": [
-        "semantic-release",
-        "conventional-changelog-conventionalcommits"
-      ],
-      "semanticCommitType": "build"
-    },
-    {
       "matchDepTypes": ["dependencies"],
       "rangeStrategy": "bump"
     }
