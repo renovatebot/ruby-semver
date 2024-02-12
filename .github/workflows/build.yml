@@ -18,6 +18,9 @@ env:
   DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
   DRY_RUN: true
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: ${{ matrix.node-version == 20 && format('test ({0})', matrix.os) || format('test ({0}, node-{1})', matrix.os, matrix.node-version) }}
@@ -34,10 +37,6 @@ jobs:
     env:
       coverage: ${{ matrix.os == 'ubuntu-latest' && matrix.node-version == 20 }}
       NODE_VERSION: ${{ matrix.node-version }}
-
-    permissions:
-      actions: write
-      contents: read
 
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -92,9 +91,6 @@ jobs:
 
     # lint shouldn't need more than 10 min
     timeout-minutes: 15
-
-    permissions:
-      contents: read
 
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
