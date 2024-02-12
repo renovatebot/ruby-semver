@@ -23,10 +23,10 @@
     "markdown-lint": "markdownlint-cli2",
     "markdown-lint-fix": "markdownlint-cli2-fix",
     "prepack": "run-s build",
-    "prepare": "run-s prepare:*",
+    "prepare": "run-s 'prepare:*'",
     "prepare:husky": "husky",
-    "prettier": "prettier --check --ignore-unknown \"**/*.*\"",
-    "prettier-fix": "prettier --write --ignore-unknown \"**/*.*\"",
+    "prettier": "prettier --check --ignore-unknown '**/*.*'",
+    "prettier-fix": "prettier --write --ignore-unknown '**/*.*'",
     "test": "run-s lint type-check jest",
     "type-check": "tsc --noEmit"
   },
