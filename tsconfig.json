@@ -1,7 +1,10 @@
 {
-  "extends": "@tsconfig/node18/tsconfig.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
     "declaration": true,
+    // we still need to support commonjs
+    "module": "CommonJS",
+    "moduleResolution": "Node10",
     "outDir": "./dist",
     "strictNullChecks": false
   },
