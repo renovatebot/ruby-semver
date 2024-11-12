@@ -124,7 +124,7 @@ export class Requirement {
     if (input instanceof Version) return new Requirement(input);
     try {
       return new Requirement(copystr(input.toString()));
-    } catch (_) {
+    } catch {
       return Requirement.default();
     }
   }
@@ -185,7 +185,7 @@ export class Requirement {
     let objStr;
     try {
       objStr = copystr(obj.toString());
-    } catch (_) {
+    } catch {
       err();
     }
 

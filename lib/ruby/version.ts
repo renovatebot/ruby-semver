@@ -198,7 +198,7 @@ export class Version {
     let versionStr;
     try {
       versionStr = copystr(version.toString());
-    } catch (_) {
+    } catch {
       return false;
     }
 
