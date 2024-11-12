@@ -71,7 +71,7 @@ export function satisfies(version: string, range: string): boolean {
     const v = new Version(version);
     const r = new Requirement(...range.split(/\s*,\s*/));
     return r.isSatisfiedBy(v);
-  } catch (_) {
+  } catch {
     return false;
   }
 }
