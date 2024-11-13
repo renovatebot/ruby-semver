@@ -662,7 +662,7 @@ test('test_bad', () => {
 //   def assert_requirement_equal(expected, actual)
 //     assert_equal req(expected), req(actual)
 //   end
-function assertRequirementEqual(expected: any, actual: any) {
+function assertRequirementEqual(expected: unknown, actual: unknown) {
   expect(req(actual).eql(req(expected))).toBe(true);
   expect(req(expected).eql(req(actual))).toBe(true);
 }

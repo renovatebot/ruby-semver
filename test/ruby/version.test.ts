@@ -166,7 +166,6 @@ test('test_initialize_invalid', () => {
 
   invalidVersions.forEach((invalid) => {
     expect(() => {
-      // eslint-disable-next-line no-new
       new Version(invalid);
     }).toThrow(`Malformed version number string ${invalid}`);
   });

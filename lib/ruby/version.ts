@@ -492,7 +492,6 @@ export class Version {
       let rhs = rhsegments[i] || 0;
       i += 1;
 
-      // eslint-disable-next-line no-continue
       if (lhs === rhs) continue;
 
       const isLeftStr = typeof lhs === 'string';
