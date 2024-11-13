@@ -21,8 +21,8 @@ export type RawRequirement = Version | string | null;
 export type ParsedRequirement = [string, Version];
 
 // TODO: consider richer `eql` semantics
-const defaultEql = (x: any, y: any): boolean => x === y;
-function uniq(array: any[], eql = defaultEql): any[] {
+const defaultEql = <T>(x: T, y: T): boolean => x === y;
+function uniq<T>(array: T[], eql = defaultEql): T[] {
   return array.filter((x, idx, arr) => arr.findIndex((y) => eql(x, y)) === idx);
 }
 
