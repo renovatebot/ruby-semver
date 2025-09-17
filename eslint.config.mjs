@@ -26,7 +26,7 @@ export default tseslint.config(
   },
   {
     linterOptions: {
-      reportUnusedDisableDirectives: true,
+      reportUnusedDisableDirectives: 'error',
     },
   },
   js.configs.recommended,
@@ -66,7 +66,6 @@ export default tseslint.config(
       'import/resolver': {
         typescript: {
           alwaysTryTypes: true,
-          project: ['tsconfig.lint.json', 'tools/jsconfig.json'],
         },
       },
     },
