@@ -1,14 +1,15 @@
-/* eslint-disable import/no-named-as-default-member */
 import eslintContainerbase from '@containerbase/eslint-plugin';
 import js from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import eslintPluginImport from 'eslint-plugin-import';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
+import * as importX from 'eslint-plugin-import-x';
 import pluginPromise from 'eslint-plugin-promise';
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import * as tseslint from 'typescript-eslint';
 import eslintJestPlugin from 'eslint-plugin-jest';
+import { defineConfig } from 'eslint/config';
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: [
       '**/.git/',
@@ -38,14 +39,13 @@ export default tseslint.config(
     ...config,
     files: ['**/*.{ts,js,mjs,cjs}'],
   })),
-  eslintPluginImport.flatConfigs.errors,
-  eslintPluginImport.flatConfigs.warnings,
-  eslintPluginImport.flatConfigs.recommended,
-  eslintPluginImport.flatConfigs.typescript,
   eslintJestPlugin.configs['flat/recommended'],
   eslintJestPlugin.configs['flat/style'],
   pluginPromise.configs['flat/recommended'],
   eslintContainerbase.configs.all,
+  // @ts-expect-error -- wrong types
+  importX.flatConfigs.recommended,
+  importX.flatConfigs.typescript,
   eslintConfigPrettier,
   {
     files: ['**/*.{ts,js,mjs,cjs}'],
@@ -63,17 +63,13 @@ export default tseslint.config(
     },
 
     settings: {
-      'import/resolver': {
-        typescript: {
-          alwaysTryTypes: true,
-        },
-      },
+      'import-x/resolver-next': [createTypeScriptImportResolver()],
     },
   },
   {
     files: ['**/*.{ts,js,mjs,cjs}'],
     rules: {
-      'import/no-extraneous-dependencies': [
+      'import-x/no-extraneous-dependencies': [
         'error',
         {
           devDependencies: [
