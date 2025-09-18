@@ -4,5 +4,9 @@ packages: []
 # need to publish workspace root with correct version
 includeWorkspaceRoot: true
 
+strictPeerDependencies: true
+
+onlyBuiltDependencies: []
+
 ignoredBuiltDependencies:
   - unrs-resolver
