@@ -80,8 +80,8 @@ jobs:
         run: pnpm jest --maxWorkers=2 --ci --coverage ${{ env.coverage }} --logHeapUsage
 
       - name: Upload coverage
+        if: env.coverage == 'true' && github.event_name != 'merge_group' && !cancelled()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        if: always() && env.coverage == 'true'
         with:
           name: coverage
           path: coverage
@@ -91,12 +91,14 @@ jobs:
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
         with:
           use_oidc: true
+          flags: node${{ matrix.node-version }}, ${{ runner.os }}
 
       - name: Codecov test results
-        if: always() && github.event_name != 'merge_group'
+        if: github.event_name != 'merge_group' && !cancelled()
         uses: codecov/test-results-action@47f89e9acb64b76debcd5ea40642d25a4adced9f # v1.1.1
         with:
           use_oidc: true
+          flags: node${{ matrix.node-version }}, ${{ runner.os }}
 
   lint:
     needs:
