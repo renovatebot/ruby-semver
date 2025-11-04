@@ -7,6 +7,7 @@ module.exports = {
     '^.+\\.ts$': 'ts-jest',
   },
   testEnvironment: 'node',
+  reporters: ci ? ['default', 'jest-junit', 'github-actions'] : ['default'],
   collectCoverage: true,
   coverageProvider: 'v8',
   coverageReporters: ci ? ['html', 'json', 'text'] : ['html', 'text'],

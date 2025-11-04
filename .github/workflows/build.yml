@@ -37,6 +37,9 @@ jobs:
     # tests shouldn't need more time
     timeout-minutes: 30
 
+    permissions:
+      id-token: write
+
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -83,11 +86,17 @@ jobs:
           name: coverage
           path: coverage
 
-      - name: Codecov
+      - name: Codecov coverage results
+        if: env.coverage == 'true' && github.event_name != 'merge_group'
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-        if: env.coverage == 'true'
+          use_oidc: true
+
+      - name: Codecov test results
+        if: always() && github.event_name != 'merge_group'
+        uses: codecov/test-results-action@47f89e9acb64b76debcd5ea40642d25a4adced9f # v1.1.1
+        with:
+          use_oidc: true
 
   lint:
     needs:
