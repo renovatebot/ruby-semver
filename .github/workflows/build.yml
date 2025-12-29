@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: ⚙️ Setup
-        uses: containerbase/internal-tools/setup@02cc079b9a4cb52a1345335b6f4b0b842be05cea # v3.14.40
+        uses: containerbase/internal-tools/setup@1fdc83c88a33e87d4d9b02e482ecf0c108367377 # v3.14.41
         with:
           save-cache: true
   test:
@@ -59,7 +59,7 @@ jobs:
           filter: blob:none # we don't need all blobs
 
       - name: ⚙️ Setup
-        uses: containerbase/internal-tools/setup@02cc079b9a4cb52a1345335b6f4b0b842be05cea # v3.14.40
+        uses: containerbase/internal-tools/setup@1fdc83c88a33e87d4d9b02e482ecf0c108367377 # v3.14.41
         with:
           checkout: false
           node-version: ${{ matrix.node-version }}
@@ -111,7 +111,7 @@ jobs:
 
     steps:
       - name: ⚙️ Setup
-        uses: containerbase/internal-tools/setup@02cc079b9a4cb52a1345335b6f4b0b842be05cea # v3.14.40
+        uses: containerbase/internal-tools/setup@1fdc83c88a33e87d4d9b02e482ecf0c108367377 # v3.14.41
 
       - name: Init platform
         run: |
@@ -149,7 +149,7 @@ jobs:
           filter: blob:none # we don't need all blobs
 
       - name: ⚙️ Setup
-        uses: containerbase/internal-tools/setup@02cc079b9a4cb52a1345335b6f4b0b842be05cea # v3.14.40
+        uses: containerbase/internal-tools/setup@1fdc83c88a33e87d4d9b02e482ecf0c108367377 # v3.14.41
         with:
           checkout: false
 
