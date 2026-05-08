@@ -7,24 +7,22 @@ import pluginPromise from 'eslint-plugin-promise';
 import globals from 'globals';
 import * as tseslint from 'typescript-eslint';
 import vitest from '@vitest/eslint-plugin';
-import { defineConfig } from 'eslint/config';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig(
-  {
-    ignores: [
-      '**/.git/',
-      '**/.vscode',
-      '**/node_modules/',
-      '**/dist/',
-      '**/coverage/',
-      '**/__fixtures__/**/*',
-      '**/__mocks__/**/*',
-      '**/*.d.ts',
-      '**/*.generated.ts',
-      'tools/dist',
-      'patches',
-    ],
-  },
+  globalIgnores([
+    '**/.git/',
+    '**/.vscode',
+    '**/node_modules/',
+    '**/dist/',
+    '**/coverage/',
+    '**/__fixtures__/**/*',
+    '**/__mocks__/**/*',
+    '**/*.d.ts',
+    '**/*.generated.ts',
+    'tools/dist',
+    'patches',
+  ]),
   {
     linterOptions: {
       reportUnusedDisableDirectives: 'error',
