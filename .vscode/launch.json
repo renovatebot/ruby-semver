@@ -4,39 +4,18 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Jest Current File",
-      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "name": "Debug Current Test File",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
       "args": [
-        "--runInBand",
-        "--collectCoverage=false",
-        "--runTestsByPath",
+        "run",
+        "--pool=forks",
+        "--poolOptions.forks.singleFork",
         "${relativeFile}"
       ],
-      "env": { "NODE_ENV": "test", "LOG_LEVEL": "debug" },
-      "console": "integratedTerminal",
-      "disableOptimisticBPs": true,
-      "windows": {
-        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-      },
-      "runtimeArgs": ["--nolazy", "--preserve-symlinks"],
-      "protocol": "inspector",
-      "skipFiles": ["<node_internals>/**/*.js"]
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Jest All",
-      "program": "${workspaceFolder}/node_modules/.bin/jest",
-      "args": ["--runInBand", "--collectCoverage=false"],
-      "env": { "NODE_ENV": "test", "LOG_LEVEL": "debug" },
-      "console": "integratedTerminal",
-      "disableOptimisticBPs": true,
-      "windows": {
-        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-      },
-      "runtimeArgs": ["--nolazy", "--preserve-symlinks"],
-      "protocol": "inspector",
-      "skipFiles": ["<node_internals>/**/*.js"]
+      "smartStep": true,
+      "console": "integratedTerminal"
     }
   ]
 }
