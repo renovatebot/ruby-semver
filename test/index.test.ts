@@ -12,7 +12,7 @@ import {
   minor,
   patch,
   prerelease,
-} from '../lib';
+} from '../lib/index.ts';
 
 function checkAsymmetric<T>(
   op: (x: T, y: T) => boolean,
