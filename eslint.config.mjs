@@ -6,7 +6,7 @@ import * as importX from 'eslint-plugin-import-x';
 import pluginPromise from 'eslint-plugin-promise';
 import globals from 'globals';
 import * as tseslint from 'typescript-eslint';
-import eslintJestPlugin from 'eslint-plugin-jest';
+import vitest from '@vitest/eslint-plugin';
 import { defineConfig } from 'eslint/config';
 
 export default defineConfig(
@@ -39,16 +39,13 @@ export default defineConfig(
     ...config,
     files: ['**/*.{ts,js,mjs,cjs}'],
   })),
-  eslintJestPlugin.configs['flat/recommended'],
-  eslintJestPlugin.configs['flat/style'],
+  vitest.configs.recommended,
   pluginPromise.configs['flat/recommended'],
   eslintContainerbase.configs.all,
-  // @ts-expect-error -- wrong types
-  importX.flatConfigs.recommended,
-  importX.flatConfigs.typescript,
   eslintConfigPrettier,
   {
     files: ['**/*.{ts,js,mjs,cjs}'],
+    extends: [importX.flatConfigs.recommended, importX.flatConfigs.typescript],
 
     languageOptions: {
       globals: {
@@ -73,10 +70,9 @@ export default defineConfig(
         'error',
         {
           devDependencies: [
-            'eslint.config.mjs',
+            '*.config.mjs',
             'test/**',
             'tools/**',
-            'jest.config.js',
             '__mocks__/**',
             '**/*.test.ts',
           ],
@@ -115,12 +111,12 @@ export default defineConfig(
 
     languageOptions: {
       globals: {
-        ...globals.jest,
+        ...globals.vitest,
       },
     },
 
     rules: {
-      'jest/expect-expect': 0,
+      'vitest/expect-expect': 0,
     },
   },
 );
