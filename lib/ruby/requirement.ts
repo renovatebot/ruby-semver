@@ -15,7 +15,7 @@
 // # together in RubyGems.
 //
 
-import { Version } from './version';
+import { Version } from './version.ts';
 
 export type RawRequirement = Version | string | null;
 export type ParsedRequirement = [string, Version];

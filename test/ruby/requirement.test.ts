@@ -1,7 +1,7 @@
 // https://github.com/ruby/ruby/blob/d4a86e407ec2057c2c7ad757aa76dad757f34c3a/test/rubygems/test_gem_requirement.rb
 
-import { Version } from '../../lib/ruby/version';
-import { parse, Requirement } from '../../lib/ruby/requirement';
+import { Version } from '../../lib/ruby/version.ts';
+import { parse, Requirement } from '../../lib/ruby/requirement.ts';
 
 const v = (x: unknown) => Version.create(x);
 const req = (...x: unknown[]) => Requirement.create(...x);

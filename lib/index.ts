@@ -1,5 +1,5 @@
-import { Version } from './ruby/version';
-import { Requirement } from './ruby/requirement';
+import { Version } from './ruby/version.ts';
+import { Requirement } from './ruby/requirement.ts';
 
 export type ReleaseType =
   | 'major'

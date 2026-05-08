@@ -4,9 +4,6 @@
   "compilerOptions": {
     "declaration": true,
     "outDir": "./dist",
-    // we still need to support commonjs
-    "module": "CommonJS",
-    "moduleResolution": "Node10",
     "types": []
   }
 }

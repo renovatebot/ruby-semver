@@ -7,8 +7,8 @@
     "url": "https://github.com/renovatebot/ruby-semver.git"
   },
   "license": "MIT",
+  "type": "module",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "files": [
     "/dist"
   ],
