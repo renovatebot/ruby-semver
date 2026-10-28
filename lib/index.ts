@@ -1,5 +1,5 @@
-import { Version } from './ruby/version.ts';
 import { Requirement } from './ruby/requirement.ts';
+import { Version } from './ruby/version.ts';
 
 export type ReleaseType =
   | 'major'
@@ -59,7 +59,9 @@ export function lte(v1: string, v2: string): boolean {
  * Return the parsed version, or null if it's not valid.
  */
 export function valid(version: string | null | undefined): string | null {
-  if (!version) return null;
+  if (!version) {
+    return null;
+  }
   return Version.isCorrect(version) ? version : null;
 }
 
@@ -85,7 +87,9 @@ export function maxSatisfying(
 ): string | null {
   return versions.reduce((x, y) => {
     const isValid = satisfies(y, range);
-    if (isValid && (!x || lt(x, y))) return y;
+    if (isValid && (!x || lt(x, y))) {
+      return y;
+    }
     return x;
   }, null);
 }
@@ -99,7 +103,9 @@ export function minSatisfying(
 ): string | null {
   return versions.reduce((x, y) => {
     const isValid = satisfies(y, range);
-    if (isValid && (!x || gt(x, y))) return y;
+    if (isValid && (!x || gt(x, y))) {
+      return y;
+    }
     return x;
   }, null);
 }
@@ -108,9 +114,13 @@ export function minSatisfying(
  * Return the major version number.
  */
 export function major(v: string | null | undefined): number {
-  if (!v) return null;
+  if (!v) {
+    return null;
+  }
   const version = Version.create(v);
-  if (!version) return null;
+  if (!version) {
+    return null;
+  }
   const [segments] = version.splitSegments();
   const [x] = segments;
   return x;
@@ -120,9 +130,13 @@ export function major(v: string | null | undefined): number {
  * Return the minor version number.
  */
 export function minor(v: string | null | undefined): number {
-  if (!v) return null;
+  if (!v) {
+    return null;
+  }
   const version = Version.create(v);
-  if (!version) return null;
+  if (!version) {
+    return null;
+  }
   const [segments] = version.splitSegments();
   const [, x] = segments;
   return typeof x === 'number' ? x : null;
@@ -132,9 +146,13 @@ export function minor(v: string | null | undefined): number {
  * Return the patch version number.
  */
 export function patch(v: string | null | undefined): number {
-  if (!v) return null;
+  if (!v) {
+    return null;
+  }
   const version = Version.create(v);
-  if (!version) return null;
+  if (!version) {
+    return null;
+  }
   const [segments] = version.splitSegments();
   const [, , x] = segments;
   return typeof x === 'number' ? x : null;
@@ -144,9 +162,13 @@ export function patch(v: string | null | undefined): number {
  * Returns an array of prerelease components, or null if none exist.
  */
 export function prerelease(v: string | null | undefined): string[] | null {
-  if (!v) return null;
+  if (!v) {
+    return null;
+  }
   const version = Version.create(v);
-  if (!version) return null;
+  if (!version) {
+    return null;
+  }
   const [, segments] = version.splitSegments();
   return segments.length ? segments.map((x) => x.toString()) : null;
 }

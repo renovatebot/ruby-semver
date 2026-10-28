@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-base-to-string */
+/* oxlint-disable typescript/no-base-to-string */
 // https://github.com/ruby/ruby/blob/d4a86e407ec2057c2c7ad757aa76dad757f34c3a/lib/rubygems/requirement.rb
 
 // import { Version } from "./version";
@@ -31,9 +31,13 @@ function reqsEql(
   yReqs: ParsedRequirement[],
   eql: (x: ParsedRequirement, y: ParsedRequirement) => boolean,
 ): boolean {
-  if (xReqs.length !== yReqs.length) return false;
+  if (xReqs.length !== yReqs.length) {
+    return false;
+  }
   for (let idx = 0; idx < xReqs.length; idx += 1) {
-    if (!eql(xReqs[idx], yReqs[idx])) return false;
+    if (!eql(xReqs[idx], yReqs[idx])) {
+      return false;
+    }
   }
   return true;
 }
@@ -115,13 +119,19 @@ export class Requirement {
   //     end
   //   end
   static create(...inputs: unknown[]): Requirement {
-    if (inputs.length > 1)
+    if (inputs.length > 1) {
       return new Requirement(...(inputs as RawRequirement[]));
+    }
     const input = inputs.shift();
-    if (input instanceof Requirement) return input;
-    if (input instanceof Array)
+    if (input instanceof Requirement) {
+      return input;
+    }
+    if (input instanceof Array) {
       return new Requirement(...(input as RawRequirement[]));
-    if (input instanceof Version) return new Requirement(input);
+    }
+    if (input instanceof Version) {
+      return new Requirement(input);
+    }
     try {
       return new Requirement(copystr(input.toString()));
     } catch {
@@ -176,11 +186,13 @@ export class Requirement {
   //   end
   static parse(obj: unknown): ParsedRequirement {
     const err = (): void => {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      // oxlint-disable-next-line typescript/restrict-template-expressions
       throw new Error(`Illformed requirement [${obj}]`);
     };
 
-    if (obj instanceof Version) return ['=', obj];
+    if (obj instanceof Version) {
+      return ['=', obj];
+    }
 
     let objStr;
     try {
@@ -190,7 +202,9 @@ export class Requirement {
     }
 
     const match = objStr.match(Requirement.PATTERN);
-    if (!match) err();
+    if (!match) {
+      err();
+    }
 
     const [, $1, $2] = match;
     return [$1 || '=', new Version($2)];
@@ -404,7 +418,9 @@ export class Requirement {
   //     not %w[> >=].include? @requirements.first.first # grab the operator
   //   end
   isSpecific(): boolean {
-    if (this._requirements.length > 1) return true;
+    if (this._requirements.length > 1) {
+      return true;
+    }
     const firstOp = this._requirements[0][0];
     return !(firstOp === '>' || firstOp === '>=');
   }
@@ -438,7 +454,9 @@ export class Requirement {
     }
 
     const tildeReqs = this._tildeRequirements();
-    if (tildeReqs.length === 0) return true;
+    if (tildeReqs.length === 0) {
+      return true;
+    }
 
     return reqsEql(
       tildeReqs,
