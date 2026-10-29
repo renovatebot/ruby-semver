@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-base-to-string */
+/* oxlint-disable typescript/no-base-to-string */
 // https://github.com/ruby/ruby/blob/d4a86e407ec2057c2c7ad757aa76dad757f34c3a/lib/rubygems/version.rb
 
 // # frozen_string_literal: true
@@ -223,8 +223,12 @@ export class Version {
   //     end
   //   end
   static create(input: unknown): Version | null {
-    if (input instanceof Version) return input;
-    if (input === null) return null;
+    if (input instanceof Version) {
+      return input;
+    }
+    if (input === null) {
+      return null;
+    }
     try {
       return new Version(input);
     } catch {
@@ -258,7 +262,7 @@ export class Version {
   //   end
   constructor(version: unknown) {
     if (!Version.isCorrect(version)) {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      // oxlint-disable-next-line typescript/restrict-template-expressions
       throw new Error(`Malformed version number string ${version}`);
     }
 
@@ -289,8 +293,9 @@ export class Version {
   //   end
   bump(): Version {
     const segments = this.getSegments();
-    while (segments.findIndex((x) => typeof x === 'string') !== -1)
+    while (segments.findIndex((x) => typeof x === 'string') !== -1) {
       segments.pop();
+    }
 
     let lastIdx = segments.length - 2;
     if (lastIdx >= 0) {
@@ -390,8 +395,9 @@ export class Version {
   release(): Version {
     if (this.isPrerelease()) {
       const segments = this.getSegments();
-      while (segments.findIndex((x) => typeof x === 'string') !== -1)
+      while (segments.findIndex((x) => typeof x === 'string') !== -1) {
         segments.pop();
+      }
       return new Version(segments.join('.'));
     }
     return this;
@@ -418,13 +424,20 @@ export class Version {
   //   end
   approximateRecommendation(): string {
     const segments = this.getSegments();
-    while (segments.findIndex((x) => typeof x === 'string') !== -1)
+    while (segments.findIndex((x) => typeof x === 'string') !== -1) {
       segments.pop();
-    while (segments.length > 2) segments.pop();
-    while (segments.length < 2) segments.push(0);
+    }
+    while (segments.length > 2) {
+      segments.pop();
+    }
+    while (segments.length < 2) {
+      segments.push(0);
+    }
 
     let recommendation = `~> ${segments.join('.')}`;
-    if (this.isPrerelease()) recommendation += '.a';
+    if (this.isPrerelease()) {
+      recommendation += '.a';
+    }
     return recommendation;
   }
 
@@ -461,12 +474,18 @@ export class Version {
   //     return 0
   //   end
   compare(other: Version | null): number {
-    if (other === null) return null;
+    if (other === null) {
+      return null;
+    }
 
     const segEq = (x: SegmentElement[], y: SegmentElement[]): boolean => {
-      if (x.length !== y.length) return false;
+      if (x.length !== y.length) {
+        return false;
+      }
       for (let idx = 0; idx < x.length; idx += 1) {
-        if (x[idx] !== y[idx]) return false;
+        if (x[idx] !== y[idx]) {
+          return false;
+        }
       }
       return true;
     };
@@ -492,12 +511,18 @@ export class Version {
       let rhs = rhsegments[i] || 0;
       i += 1;
 
-      if (lhs === rhs) continue;
+      if (lhs === rhs) {
+        continue;
+      }
 
       const isLeftStr = typeof lhs === 'string';
       const isRightStr = typeof rhs === 'string';
-      if (isLeftStr && !isRightStr) return -1;
-      if (!isLeftStr && isRightStr) return 1;
+      if (isLeftStr && !isRightStr) {
+        return -1;
+      }
+      if (!isLeftStr && isRightStr) {
+        return 1;
+      }
 
       lhs = lhs.toString();
       rhs = rhs.toString();

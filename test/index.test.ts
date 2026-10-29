@@ -4,14 +4,14 @@ import {
   gte,
   lt,
   lte,
-  valid,
-  satisfies,
+  major,
   maxSatisfying as max,
   minSatisfying as min,
-  major,
   minor,
   patch,
   prerelease,
+  satisfies,
+  valid,
 } from '../lib/index.ts';
 
 function checkAsymmetric<T>(

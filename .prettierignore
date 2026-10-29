@@ -1,7 +1,0 @@
-/node_modules
-/coverage
-/dist
-.DS_Store
-.cache
-/*.log
-/pnpm-lock.yaml
