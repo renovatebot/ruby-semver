@@ -2,8 +2,9 @@ name: build
 
 on:
   push:
-    branches-ignore:
-      - gh-readonly-queue/**
+    branches:
+      - main
+      - maint/**
 
   pull_request:
   merge_group:
@@ -53,6 +54,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 10 # required for coverage
           show-progress: false
           filter: blob:none # we don't need all blobs
@@ -76,7 +78,8 @@ jobs:
         run: pnpm build
 
       - name: Unit tests
-        run: pnpm vitest --coverage ${{ env.coverage }} --logHeapUsage
+        shell: bash
+        run: pnpm vitest --coverage "${coverage}" --logHeapUsage
 
       - name: Upload coverage
         if: env.coverage == 'true' && github.event_name != 'merge_group' && !cancelled()
@@ -140,9 +143,10 @@ jobs:
       id-token: write
 
     steps:
-      # full checkout for semantic-release
+      # full checkout for semantic-release, which pushes with its own token
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
           show-progress: false
           filter: blob:none # we don't need all blobs
@@ -153,8 +157,9 @@ jobs:
           checkout: false
 
       - name: semantic-release
-        run: pnpm semantic-release --dry-run ${{env.DRY_RUN}} --ci ${{env.DRY_RUN != 'true'}}
+        run: pnpm semantic-release --dry-run "${DRY_RUN}" --ci "${CI_MODE}"
         env:
+          CI_MODE: ${{ env.DRY_RUN != 'true' }}
           GITHUB_TOKEN: ${{ github.token }}
 
   # Catch-all required check
