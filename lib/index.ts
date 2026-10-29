@@ -81,10 +81,7 @@ export function satisfies(version: string, range: string): boolean {
 /**
  * Return the highest version in the list that satisfies the range, or null if none of them do.
  */
-export function maxSatisfying(
-  versions: string[],
-  range: string,
-): string | null {
+export function maxSatisfying(versions: string[], range: string): string | null {
   return versions.reduce((x, y) => {
     const isValid = satisfies(y, range);
     if (isValid && (!x || lt(x, y))) {
@@ -97,10 +94,7 @@ export function maxSatisfying(
 /**
  * Return the lowest version in the list that satisfies the range, or null if none of them do.
  */
-export function minSatisfying(
-  versions: string[],
-  range: string,
-): string | null {
+export function minSatisfying(versions: string[], range: string): string | null {
   return versions.reduce((x, y) => {
     const isValid = satisfies(y, range);
     if (isValid && (!x || gt(x, y))) {

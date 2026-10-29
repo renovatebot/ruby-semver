@@ -14,22 +14,12 @@ import {
   valid,
 } from '../lib/index.ts';
 
-function checkAsymmetric<T>(
-  op: (x: T, y: T) => boolean,
-  left: T,
-  right: T,
-  result = true,
-) {
+function checkAsymmetric<T>(op: (x: T, y: T) => boolean, left: T, right: T, result = true) {
   expect(op(left, right)).toBe(result);
   expect(op(right, left)).toBe(!result);
 }
 
-function checkSymmetric<T>(
-  op: (x: T, y: T) => boolean,
-  left: T,
-  right: T,
-  result = true,
-) {
+function checkSymmetric<T>(op: (x: T, y: T) => boolean, left: T, right: T, result = true) {
   expect(op(left, right)).toBe(result);
   expect(op(right, left)).toBe(result);
 }
@@ -134,18 +124,13 @@ test('maxSatisfying', () => {
 
   expect(max(['2.1.6', '2.1.5'], '~> 2.1.6')).toBe('2.1.6');
 
-  expect(max(['4.7.3', '4.7.4', '4.7.5', '4.7.9'], '~> 4.7, >= 4.7.4')).toBe(
-    '4.7.9',
-  );
+  expect(max(['4.7.3', '4.7.4', '4.7.5', '4.7.9'], '~> 4.7, >= 4.7.4')).toBe('4.7.9');
 
   expect(max(['2.5.3', '2.5.4', '2.5.5', '2.5.6'], '~>2.5.3')).toBe('2.5.6');
 
-  expect(
-    max(
-      ['2.1.0', '3.0.0.beta', '2.3', '3.0.0-rc.1', '3.0.0', '3.1.1'],
-      '~> 3.0',
-    ),
-  ).toBe('3.1.1');
+  expect(max(['2.1.0', '3.0.0.beta', '2.3', '3.0.0-rc.1', '3.0.0', '3.1.1'], '~> 3.0')).toBe(
+    '3.1.1',
+  );
 
   expect(max(['1.2.3', '1.2.4'], '>= 3.5.0')).toBeNull();
 });
@@ -155,18 +140,13 @@ test('minSatisfying', () => {
 
   expect(min(['2.1.6', '2.1.5'], '~> 2.1.6')).toBe('2.1.6');
 
-  expect(min(['4.7.3', '4.7.4', '4.7.5', '4.7.9'], '~> 4.7, >= 4.7.4')).toBe(
-    '4.7.4',
-  );
+  expect(min(['4.7.3', '4.7.4', '4.7.5', '4.7.9'], '~> 4.7, >= 4.7.4')).toBe('4.7.4');
 
   expect(min(['2.5.3', '2.5.4', '2.5.5', '2.5.6'], '~>2.5.3')).toBe('2.5.3');
 
-  expect(
-    min(
-      ['2.1.0', '3.0.0.beta', '2.3', '3.0.0-rc.1', '3.0.0', '3.1.1'],
-      '~> 3.0',
-    ),
-  ).toBe('3.0.0');
+  expect(min(['2.1.0', '3.0.0.beta', '2.3', '3.0.0-rc.1', '3.0.0', '3.1.1'], '~> 3.0')).toBe(
+    '3.0.0',
+  );
 
   expect(min(['1.2.3', '1.2.4'], '>= 3.5.0')).toBeNull();
 });

@@ -8,12 +8,7 @@
       "autoAttachChildProcesses": true,
       "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
       "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
-      "args": [
-        "run",
-        "--pool=forks",
-        "--poolOptions.forks.singleFork",
-        "${relativeFile}"
-      ],
+      "args": ["run", "--pool=forks", "--poolOptions.forks.singleFork", "${relativeFile}"],
       "smartStep": true,
       "console": "integratedTerminal"
     }

@@ -13,13 +13,7 @@
     "builtin": true,
     "node": true
   },
-  "ignorePatterns": [
-    "dist/",
-    "coverage/",
-    ".claude/worktrees/",
-    ".pnpm-store",
-    "**/*.d.ts"
-  ],
+  "ignorePatterns": ["dist/", "coverage/", ".claude/worktrees/", ".pnpm-store", "**/*.d.ts"],
   "rules": {
     "containerbase/enforce-ts-extension": "off",
     "containerbase/no-undeclared-dependencies": "error",
@@ -149,10 +143,7 @@
     {
       "files": ["test/**", "*.config.mjs"],
       "rules": {
-        "containerbase/no-undeclared-dependencies": [
-          "error",
-          { "allowDevDependencies": true }
-        ]
+        "containerbase/no-undeclared-dependencies": ["error", { "allowDevDependencies": true }]
       }
     },
     {

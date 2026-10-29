@@ -458,10 +458,8 @@ export class Requirement {
       return true;
     }
 
-    return reqsEql(
-      tildeReqs,
-      other._tildeRequirements(),
-      ([, xVer], [, yVer]) => xVer.strictEql(yVer),
+    return reqsEql(tildeReqs, other._tildeRequirements(), ([, xVer], [, yVer]) =>
+      xVer.strictEql(yVer),
     );
   }
 
